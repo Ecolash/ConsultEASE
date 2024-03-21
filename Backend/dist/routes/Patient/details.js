@@ -50,6 +50,7 @@ exports.detailsRouter.post('/add', (req, res) => __awaiter(void 0, void 0, void 
         yield prisma.patient.update({
             where: { id: patientId },
             data: {
+                mobile: body.mobile,
                 age: body.age,
                 gender: body.gender,
                 latitude: body.latitude,
@@ -88,6 +89,7 @@ exports.detailsRouter.put('/update', (req, res) => __awaiter(void 0, void 0, voi
                 name: body.name,
                 password: body.password,
                 age: body.age,
+                mobile: body.mobile,
                 gender: body.gender,
                 latitude: body.latitude,
                 longitude: body.longitude

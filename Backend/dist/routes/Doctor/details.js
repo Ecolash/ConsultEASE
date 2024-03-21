@@ -20,6 +20,7 @@ exports.detailsRouter = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
 exports.detailsRouter.use('/*', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const webtoken = req.header('Authorization');
+    //console.log(webtoken);
     if (!webtoken) {
         res.status(401);
         return res.json({ error: "Unauthorized" });
@@ -52,6 +53,7 @@ exports.detailsRouter.post('/add', (req, res) => __awaiter(void 0, void 0, void 
             data: {
                 age: body.age,
                 gender: body.gender,
+                mobile: body.mobile,
                 latitude: body.latitude,
                 longitude: body.longitude,
                 specialization: body.specialization,
@@ -92,6 +94,7 @@ exports.detailsRouter.put('/update', (req, res) => __awaiter(void 0, void 0, voi
             data: {
                 name: body.name,
                 password: body.password,
+                mobile: body.mobile,
                 age: body.age,
                 gender: body.gender,
                 latitude: body.latitude,

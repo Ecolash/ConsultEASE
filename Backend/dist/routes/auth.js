@@ -81,7 +81,8 @@ exports.authRouter.post('/signin', (req, res) => __awaiter(void 0, void 0, void 
     if (patient) {
         const jwtsecret = process.env.JWT_PASSWORD || 'secret';
         const token = jsonwebtoken_1.default.sign({ id: patient.id }, jwtsecret);
-        return res.json({ jwt: token });
+        return res.json({ jwt: token,
+            type: "Patient" });
     }
     else {
         const doctor = yield prisma.doctor.findFirst({
@@ -91,7 +92,8 @@ exports.authRouter.post('/signin', (req, res) => __awaiter(void 0, void 0, void 
         if (doctor) {
             const jwtsecret = process.env.JWT_PASSWORD || 'secret';
             const token = jsonwebtoken_1.default.sign({ id: doctor.id }, jwtsecret);
-            return res.json({ jwt: token });
+            return res.json({ jwt: token,
+                type: "Doctor" });
         }
         else {
             return res.json({ message: "Invalid Credentials" });

@@ -45,7 +45,12 @@ export const Authentication=()=>{
           alert(json.message);
         }else{
           localStorage.setItem("token",json.jwt);
-          navigate('/');
+          if(postInputs.type=="Doctor"){
+            navigate("/doc/info");
+          }
+          else{
+            navigate("/pat/info");
+          }
         }
       }catch(e){
         alert("Error while signing");
@@ -61,7 +66,14 @@ export const Authentication=()=>{
         alert(json.message);
       }else{
         localStorage.setItem("token",json.jwt);
-        navigate('/');
+        let t="";
+        if(json.type=="Doctor"){
+          t="doc";
+        }
+        else{
+          t="pat";
+        }
+        navigate(`/${t}/info`);
       }
     }catch(e){
       alert("Error while signing");

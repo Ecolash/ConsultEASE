@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 
 detailsRouter.use('/*',async(req:Request,res:Response,next:NextFunction)=>{
     const webtoken=req.header('Authorization');
+    //console.log(webtoken);
     if(!webtoken){
         res.status(401);
         return res.json({error:"Unauthorized"});
