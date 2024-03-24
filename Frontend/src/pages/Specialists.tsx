@@ -77,6 +77,17 @@ export const DocSpl=()=>{
     doctors.forEach(doctor=>{
         convert(doctor)
     })
+    async function fetchCity(doctor:docsplType):Promise<string>{
+        try {
+            const response = await axios.get(`https://api-bdc.net/data/reverse-geocode?latitude=${doctor.latitude}&longitude=${doctor.longitude}&localityLanguage=en&key=bdc_2ea2200a8bec4bf69c4d4534c535f042`);
+            const city = response.data.city;
+            return city;
+        } catch (error) {
+            // Handle errors here if needed
+            console.error("Error fetching city:", error);
+            return ""; // Or any default value indicating failure
+        }
+    }
     useEffect(()=>{
         axios.get(`${BACKEND_URL}/api/v1/patient/details/get`,{
             headers:{
@@ -117,7 +128,8 @@ export const DocSpl=()=>{
                                         clinic={doctor.clinic} 
                                         fee={doctor.fee}
                                         clinic_days={doctor.clinic_days}
-                                        rating={doctor.rating} />
+                                        rating={doctor.rating}
+                                        city={fetchCity(doctor)} />
                             )}
                         </div>
             </div>

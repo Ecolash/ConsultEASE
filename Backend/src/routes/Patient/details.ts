@@ -65,6 +65,7 @@ detailsRouter.get('/get', async (req:Request, res:Response)=>{
     }
 })
 
+
 detailsRouter.put('/update', async (req:Request, res:Response)=>{
     const patientId=res.get('patientId');
     const body=req.body;

@@ -5,7 +5,6 @@ import { Patinfo } from './pages/PatinfoPage'
 import { PatDash } from './pages/PatDashboard'
 import { DocDash } from './pages/DocDashboard'
 import { DocSpl } from './pages/Specialists'
-import { Booking } from './components/Booking'
 function App() {
 
   return (

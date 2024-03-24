@@ -12,19 +12,26 @@ interface DocCardProps{
   fee:number,
   clinic_days:string[],
   rating:number
+  city:Promise<string>
 }
 
 export const DocCard:React.FC<DocCardProps>=(props)=>{
   const navigate = useNavigate();
-  const [Visibility,setVisibility] = useState("hide");
   const daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  const [popup,setPopup]=useState(false);
+  const [resolvedCity, setResolvedCity] = useState("");
+
+  useEffect(() => {
+    props.city.then((resolvedCity) => {
+      setResolvedCity(resolvedCity);
+    });
+  }, [props.city]);
 
   const isDayAvailable: Record<string, boolean> = {};
   
   daysOfWeek.forEach(day => {
     isDayAvailable[day] = props.clinic_days.includes(day);
   });
-  useEffect(() => {},[Visibility]);
 
   return (
     <div className="w-[482px] h-[139px] mx-10 my-3 flex-wrap">
@@ -40,7 +47,7 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
                   {props.specialization} | {props.yoe} years of experience
                 </div>
                 <div className="absolute w-[160px] top-[45px] left-0 font-sans font-semibold text-violet-800 text-[12px] tracking-[0] leading-[16.8px]">
-                   {props.clinic}
+                   {props.clinic},{resolvedCity}
                 </div>
               </div>
               <p className="absolute top-[88px] left-[8px] font-sans font-normal text-transparent text-[13px] tracking-[0] leading-[16.8px] whitespace-nowrap">
@@ -67,7 +74,7 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
             </div>
           </div>
           <button className="flex w-[112px] h-[30px] items-center justify-center gap-[8px] px-[16px] py-0 absolute top-[92px] left-[358px] bg-violet-800 rounded-[8px] hover:scale-105" onClick={()=>{
-            setVisibility("show");
+            setPopup(true);
           }}>
             <div className="relative w-fit font-sans font-bold text-white text-[14px] tracking-[0] leading-[19.6px] whitespace-nowrap">
               Book Slot
@@ -75,7 +82,13 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
           </button>
         </div>
       </div>
-      <Booking InitialVisibility={Visibility} />
+      <Booking  trigger={popup} setTrigger={setPopup} 
+                name={props.name}
+                specialization={props.specialization}
+                rating={props.rating}
+                fee={props.fee}
+                clinic={props.clinic}
+                id={props.id} />
     </div>
   );
 };
