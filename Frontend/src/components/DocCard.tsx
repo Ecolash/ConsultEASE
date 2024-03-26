@@ -18,8 +18,9 @@ interface DocCardProps{
 export const DocCard:React.FC<DocCardProps>=(props)=>{
   const navigate = useNavigate();
   const daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-  const [popup,setPopup]=useState(false);
   const [resolvedCity, setResolvedCity] = useState("");
+  const [popup,setPopup]=useState(false);
+
 
   useEffect(() => {
     props.city.then((resolvedCity) => {
@@ -34,7 +35,7 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
   });
 
   return (
-    <div className="w-[482px] h-[139px] mx-10 my-3 flex-wrap">
+    <div className="w-[482px] h-[139px] mx-10 my-3 flex-wrap z-0">
       <div className="w-[482px] h-[139px] top-0 left-0">
         <div className="relative h-[139px] rounded-[15px] ">
           <div className="w-[482px] h-[145px] left-0 bg-violet-100 rounded-[15px] border-violet-300 border-2 absolute top-0 overflow-hidden hover:bg-violet-200">
@@ -46,7 +47,7 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
                 <div className="absolute w-[334px] top-[26px] left-0 font-sans font-semibold text-violet-800 text-[12px] tracking-[0] leading-[18.2px]">
                   {props.specialization} | {props.yoe} years of experience
                 </div>
-                <div className="absolute w-[160px] top-[45px] left-0 font-sans font-semibold text-violet-800 text-[12px] tracking-[0] leading-[16.8px]">
+                <div className="absolute w-auto text-wrap h-auto top-[45px] left-0 font-sans font-semibold text-violet-800 text-[12px] tracking-[0] leading-[16.8px]">
                    {props.clinic},{resolvedCity}
                 </div>
               </div>
@@ -82,13 +83,14 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
           </button>
         </div>
       </div>
-      <Booking  trigger={popup} setTrigger={setPopup} 
-                name={props.name}
-                specialization={props.specialization}
-                rating={props.rating}
-                fee={props.fee}
-                clinic={props.clinic}
-                id={props.id} />
+      <Booking trigger={popup} setTrigger={setPopup}
+                                        name={props.name}
+                                        specialization={props.specialization}
+                                        rating={props.rating}
+                                        fee={props.fee}
+                                        clinic={props.clinic}
+                                        id={props.id}
+                                        clinic_days={props.clinic_days} />
     </div>
   );
 };

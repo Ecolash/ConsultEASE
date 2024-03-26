@@ -1,5 +1,6 @@
 import { MoreVertical, ChevronLast, ChevronFirst, CircleUser } from "lucide-react";
 import {ReactNode, useContext, createContext, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface SidebarContextType {
   expanded: boolean;
@@ -53,9 +54,10 @@ export const Sidebar=({ children,name,email }:{children:ReactNode,name:string,em
   );
 }
 
-export function SidebarItem({ icon, text, active, alert }:{icon: ReactNode; text: string; active?: boolean; alert?: boolean }) {
+export function SidebarItem({ icon, text, active, alert,path }:{icon: ReactNode; text: string; active?: boolean; alert?: boolean ,path:string}) {
   const { expanded } = useContext(SidebarContext) as SidebarContextType;
   return (
+    <Link to={path}>
     <li
       className={`
         relative flex items-center py-2 px-3 my-1
@@ -97,5 +99,6 @@ export function SidebarItem({ icon, text, active, alert }:{icon: ReactNode; text
         </div>
       )}
     </li>
+    </Link>
   );
 }

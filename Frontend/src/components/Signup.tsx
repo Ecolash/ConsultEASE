@@ -73,7 +73,7 @@ export const Authentication=()=>{
         else{
           t="pat";
         }
-        navigate(`/${t}/info`);
+        navigate(`/${t}/dashboard`);
       }
     }catch(e){
       alert("Error while signing");

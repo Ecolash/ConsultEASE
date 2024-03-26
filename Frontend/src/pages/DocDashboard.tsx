@@ -37,13 +37,13 @@ export const DocDash=()=>{
     return <div className="flex justify-center align-middle">
         <Sidebar name={docIntro.name} email={docIntro.email}>
             <hr className='my-2'/>
-            <SidebarItem icon = {<HomeIcon size={20} />} text ='Home' active/>
-            <SidebarItem icon = {<UserCircle size={20} />} text ='Profile'/>
-            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard'/> 
-            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments'/> 
+            <SidebarItem icon = {<HomeIcon size={20} />} text ='Home' active path="/doc/dashboard"/>
+            <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/doc/profile"/>
+            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard' path="/#"/> 
+            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' path="/#" /> 
             <hr className='my-3'/>
-            <SidebarItem icon = {<Settings size={20} />} text ='Settings'/>
-            <SidebarItem icon = {<Info size={20} />} text ='About'/>
+            <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="#"/>
+            <SidebarItem icon = {<Info size={20} />} text ='About' path="#"/>
         </Sidebar>    
         <Doc_Appointment />
     </div>

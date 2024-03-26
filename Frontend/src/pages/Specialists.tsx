@@ -1,4 +1,5 @@
 import axios from "axios" 
+import React from "react"
 import { useState,useEffect } from "react"
 import { BACKEND_URL } from "../config"
 import { useParams } from "react-router-dom"
@@ -53,13 +54,14 @@ function convert(doctor: docsplType): void {
     if (fullSpecialization) {
       doctor.specialization = fullSpecialization;
     }
-  }
+}
 export const DocSpl=()=>{
     const {type}=useParams();
     console.log("Hii");
     console.log(type);
     const [loading,setLoading]=useState(true);
     const [doctors,setDoctors]=useState<docsplType[]>([]);
+
     useEffect(()=>{
         axios.get(`${BACKEND_URL}/api/v1/patient/doctors/${type}`,{
             headers:{
@@ -108,28 +110,31 @@ export const DocSpl=()=>{
     return <div className="flex">
         <Sidebar name={patIntro.name} email={patIntro.email}>
             <hr className='my-2'/>
-            <SidebarItem icon = {<HomeIcon size={20} />} text ='Home' active/>
-            <SidebarItem icon = {<UserCircle size={20} />} text ='Profile'/>
-            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard'/> 
-            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments'/> 
+            <SidebarItem icon = {<HomeIcon size={20} />} text ='Home' active path="/pat/dashboard"/>
+            <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/#"/>
+            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard' path="/#"/> 
+            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' path="/pat/appointments" /> 
             <hr className='my-3'/>
-            <SidebarItem icon = {<Settings size={20} />} text ='Settings'/>
-            <SidebarItem icon = {<Info size={20} />} text ='About'/>
+            <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="/#" />
+            <SidebarItem icon = {<Info size={20} />} text ='About' path="/#" />
         </Sidebar>
         <div className='bg-indigo-50 h-screen items-center flex flex-col flex-grow'>
             <div className='overflow-y-scroll h-screen w-[500px] rounded-2xl flex flex-col no-scrollbar items-center my-6 border-black bg-indigo-100'>
                         <div >
                             {doctors.map(doctor=>
-                                <DocCard key={doctor.id} 
-                                        name={doctor.name}
-                                        id={doctor.id} 
-                                        specialization={doctor.specialization}
-                                        yoe={doctor.experience} 
-                                        clinic={doctor.clinic} 
-                                        fee={doctor.fee}
-                                        clinic_days={doctor.clinic_days}
-                                        rating={doctor.rating}
-                                        city={fetchCity(doctor)} />
+                                
+                                <DocCard key={doctor.id}
+                                    name={doctor.name}
+                                    id={doctor.id}
+                                    specialization={doctor.specialization}
+                                    yoe={doctor.experience}
+                                    clinic={doctor.clinic}
+                                    fee={doctor.fee}
+                                    clinic_days={doctor.clinic_days}
+                                    rating={doctor.rating}
+                                    city={fetchCity(doctor)}
+                                     />
+                                    
                             )}
                         </div>
             </div>

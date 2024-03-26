@@ -66,11 +66,6 @@ bookRouter.get('/offline/appointments',async (req:Request, res:Response)=>{
         const appointments=await prisma.offline_Appointment.findMany({
             where:{patientId:patientId},
         });
-        if(!appointments){
-            return res.json({
-                message:"No appointments"
-            });
-        }
         return res.json(appointments);
     }catch(e){
         console.log(e);

@@ -10,8 +10,10 @@ interface booktype{
   fee:number;
   clinic:string;
   id:string;
+  clinic_days:string[];
 }
 interface dateselector{
+  clinic_days:string[];
   selectedDate:Date;
   setSelectedDate:React.Dispatch<React.SetStateAction<Date>>;
 }
@@ -55,8 +57,8 @@ export const  Booking:React.FC<booktype>=(props)=>{
 
 
   return (props.trigger)?(
-    <div className="w-screen h-screen z-10 align-middle items-center ">
-      <div className="fixed w-[833px] h-[584px] top-[120px] left-[390px]">
+    <div className="w-screen h-screen  align-middle items-center ">
+      <div className="fixed w-[833px] h-[584px] z-50 top-[120px] left-[390px]">
         <div className="relative h-[584px] bg-violet-50 rounded-[15px] overflow-hidden">
           <div className="absolute w-[306px] h-[510px] top-[62px] left-[14px] bg-[#5a21b6] rounded-[10px] overflow-hidden">
             <img
@@ -105,7 +107,7 @@ export const  Booking:React.FC<booktype>=(props)=>{
             <div className="h-[140px] top-[120px] left-[16px] absolute w-[459px] bg-[#5a21b6] rounded-[10px]">
               <div className="h-[100px] top-[32px] left-[7px] w-[446px] absolute bg-white rounded-[8px] border border-solid border-[#e0e0e0] shadow-[0px_1px_2px_#0000000d] flex m-auto p-auto" >
 
-          <DateSelector selectedDate={selectedDate as Date } setSelectedDate={setSelectedDate as React.Dispatch<React.SetStateAction<Date>>}/>           
+          <DateSelector clinic_days={props.clinic_days} selectedDate={selectedDate as Date } setSelectedDate={setSelectedDate as React.Dispatch<React.SetStateAction<Date>>}/>           
            </div>
               <div className="absolute w-[530px] top-[5px] left-[5px] font-sans font-bold text-[#eeeeee] text-[16px] tracking-[0] leading-[24px]">
                 &nbsp;&nbsp; Select Date
@@ -137,7 +139,7 @@ export const  Booking:React.FC<booktype>=(props)=>{
 };
 
 
-const Card = ({ date, onSelect, selected }: { date: Date, onSelect: (date: Date) => void, selected: boolean|undefined }) => {
+const Card = ({ date, onSelect, selected,clinic_days }: { date: Date, onSelect: (date: Date) => void, selected: boolean|undefined ,clinic_days:string[]}) => {
   const formattedDate = new Date(date).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -147,8 +149,29 @@ const Card = ({ date, onSelect, selected }: { date: Date, onSelect: (date: Date)
     weekday: 'long',
   }
   );
-
-  return (
+  function convertDay(formattedDay: string):string{
+    switch (formattedDay) {
+      case 'Sunday':
+        return 'sun';
+      case 'Monday':
+        return 'mon';
+      case 'Tuesday':
+        return 'tue';
+      case 'Wednesday':
+        return 'wed';
+      case 'Thursday':
+        return 'thu';
+      case 'Friday':
+        return 'fri';
+      case 'Saturday':
+        return 'sat';
+      default:
+        return '';
+    }
+  }
+  const compareday=convertDay(formattedDay);
+  const val=clinic_days.includes(compareday);
+  return ((val)?(
     <button className={`w-[80px] h-[90px] my-1 max-w-xs overflow-hidden rounded-lg shadow-md hover:shadow-xl bg-indigo-100 hover:bg-indigo-300 focus:bg-green-500 transition-shadow duration-300 ease-in-out`} onClick={() => onSelect(date)}>
     <div className="w-[80px] h-[90px] relative">
         <div className="top-0 absolute w-[80px] h-[20px] left-0 bg-[#401b85] overflow-hidden">
@@ -164,6 +187,24 @@ const Card = ({ date, onSelect, selected }: { date: Date, onSelect: (date: Date)
         <img className="absolute w-[50px] h-[50px] top-[20px] left-[15px] object-cover" alt="Date" src="/date.png" />
       </div>
     </button>
+
+  ):(
+    <button className={`w-[80px] h-[90px] my-1 max-w-xs overflow-hidden rounded-lg shadow-md hover:shadow-xl bg-gray-100 transition-shadow duration-300 ease-in-out`}>
+        <div className="w-[80px] h-[90px] relative">
+            <div className="top-0 absolute w-[80px] h-[20px] left-0 bg-gray-500 overflow-hidden">
+              <div className="absolute w-[90px] top-0 left-[-5px] font-sans font-bold text-[#eeeeee] text-[14px] text-center tracking-[0] leading-[normal]">
+                {formattedDate}
+              </div>
+            </div>
+            <div className="top-[70px] absolute w-[80px] h-[20px] left-0 bg-gray-500 overflow-hidden">
+              <div className="absolute w-[90px] top-[1px] left-[-5px] font-sans font-bold text-[#eeeeee] text-[12px] text-center tracking-[0] leading-[normal]">
+                {formattedDay}
+              </div>
+            </div>
+            <img className="absolute w-[50px] h-[50px] top-[20px] left-[15px] object-cover" alt="Date" src="/date_gray.png" />
+          </div>
+        </button>
+  )      
   );
 };
 
@@ -193,6 +234,7 @@ const DateSelector:React.FC<dateselector> = (props) => {
             date={date}
             onSelect={handleDateSelect}
             selected={props.selectedDate && props.selectedDate.getTime() == date.getTime()}
+            clinic_days={props.clinic_days}
           />
         ))}
     </div>

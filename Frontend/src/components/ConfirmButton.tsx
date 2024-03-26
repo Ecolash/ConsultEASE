@@ -40,7 +40,7 @@ const ConfirmRejectButton = ({id,time,confirmed,rejected}:{id:string,time:string
   async function handleReject(){
     setStatus("Rejected");
     try{
-      const response=await axios.post(`${BACKEND_URL}/api/v1/doctor/dashboard/${id}/reject`,{
+      const response=await axios.post(`${BACKEND_URL}/api/v1/doctor/dashboard/${id}/reject`,{},{
         headers:{
           'Authorization':`Bearer ${localStorage.getItem('token')}`
         }
@@ -52,6 +52,7 @@ const ConfirmRejectButton = ({id,time,confirmed,rejected}:{id:string,time:string
     }catch(e){
       alert('Error while processing');
     }
+    console.log(id);
   };
 
   return (

@@ -5,6 +5,8 @@ import { Patinfo } from './pages/PatinfoPage'
 import { PatDash } from './pages/PatDashboard'
 import { DocDash } from './pages/DocDashboard'
 import { DocSpl } from './pages/Specialists'
+import { PatAppointments } from './pages/PatAppointments'
+import { Doc_Profile } from './pages/DocProfile'
 function App() {
 
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path='/pat/dashboard' element={<PatDash />} />
         <Route path='/doc/dashboard' element={<DocDash />} />
         <Route path='/pat/dashboard/:type' element={<DocSpl />} />
+        <Route path='/pat/appointments' element={<PatAppointments />} />
+        <Route path='/doc/profile' element={<Doc_Profile />} />
       </Routes>
       </BrowserRouter>
     </>

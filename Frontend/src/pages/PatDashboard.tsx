@@ -36,13 +36,13 @@ export const PatDash=()=>{
     return <div className="flex flex-center align start">
         <Sidebar name={patIntro.name} email={patIntro.email}>
             <hr className='my-2'/>
-            <SidebarItem icon = {<HomeIcon size={20} />} text ='Home' active/>
-            <SidebarItem icon = {<UserCircle size={20} />} text ='Profile'/>
-            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard'/> 
-            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments'/> 
+            <SidebarItem icon = {<HomeIcon size={20} />} text ='Home' active path="/pat/dashboard"/>
+            <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/#"/>
+            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard' path="/#"/> 
+            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' path="/pat/appointments"/> 
             <hr className='my-3'/>
-            <SidebarItem icon = {<Settings size={20} />} text ='Settings'/>
-            <SidebarItem icon = {<Info size={20} />} text ='About'/>
+            <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="/#"/>
+            <SidebarItem icon = {<Info size={20} />} text ='About' path="/#"/>
         </Sidebar>
         <DocTypes />  
     </div>
