@@ -24,7 +24,7 @@ detailsRouter.use('/*',async(req:Request,res:Response,next:NextFunction)=>{
         res.set({'doctorId':payload.id});
         next();
     }catch(e){
-        res.status(403);
+        res.status(408);
         return res.json({
             message:"Not logged in"
         })
@@ -79,7 +79,6 @@ detailsRouter.put('/update', async (req:Request, res:Response)=>{
         await prisma.doctor.update({
             where:{id:doctorId},
             data:{
-                name:body.name,
                 password:body.password,
                 mobile:body.mobile,
                 age:body.age,
@@ -90,7 +89,7 @@ detailsRouter.put('/update', async (req:Request, res:Response)=>{
                 experience:body.experience,
                 clinic:body.clinic,
                 fee:body.fee,
-                clinic_days:body.clinic_daysg
+                clinic_days:body.clinic_days
             }
         })
         return res.json({message:"Successfully Updated"});

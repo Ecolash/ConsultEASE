@@ -2,6 +2,7 @@ import {
     ChevronsUpDownIcon,
     Clock10Icon, 
     BookX,
+    NewspaperIcon
   } from "lucide-react";
   import {
     Card,
@@ -15,6 +16,8 @@ import {
   import { doctorFullInfotype } from "../InputTypes/info";
   import { BACKEND_URL } from "../config";
   import axios from "axios";
+  import { Link } from "react-router-dom";
+  import { useNavigate } from "react-router-dom";
 
   type appointmentType={
     id:string,
@@ -27,6 +30,7 @@ import {
     completed:boolean,
     confirmed:boolean,
     rejected:boolean,
+    feedback_given:boolean
   }
   
   
@@ -69,150 +73,18 @@ export function convert(spl: string): string{
 }
 }
    
-  const TABLE_HEAD = ["Doctor Name", "Specialization", "Status", "Date and Time","Location", "Action"];
+const TABLE_HEAD = ["Doctor Name", "Specialization", "Status", "Date and Time","Location", "Action"];
    
-  const TABLE_ROWS = [
-    {
-      name: "John Michael",
-      specialization: "Pulmonologist",
-      years : "5",
-      rating : "4.2",
-      status: 'Confirmed',
-      date: "23/04/18",
-      time: "7:30 PM",
-      clinicName: "XYZ Clinic",
-      address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-      name: "Alexa Liras",
-      specialization: "Pulmonologist",
-      years : "5",
-      rating : "4.2",
-      status: 'Rejected',
-      date: "23/04/18",
-      time: "7:30 PM",
-      clinicName: "XYZ Clinic",
-      address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-      name: "Laurent Perrier",
-      specialization: "Pulmonologist",
-      years : "5",
-      rating : "4.2",
-      status: 'Pending',
-      date: "19/09/17",
-      time: "7:30 PM",
-      clinicName: "XYZ Clinic",
-      address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-      name: "Michael Levi",
-      specialization: "Pulmonologist",
-      years : "5",
-      rating : "4.2",
-      status: 'Completed',
-      date: "24/12/08",
-      time: "7:30 PM",
-      clinicName: "XYZ Clinic",
-      address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-      name: "Richard Gran",
-      specialization: "Pulmonologist",
-      years : "5",
-      rating : "4.2",
-      status: 'Completed',
-      date: "04/10/21",
-      time: "7:30 PM",
-      clinicName: "XYZ Clinic",
-      address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-        name: "Richard Gran",
-        specialization: "Pulmonologist",
-        years : "5",
-      rating : "4.2",
-        status: 'Rejected',
-        date: "04/10/21",
-        time: "7:30 PM",
-        clinicName: "XYZ Clinic",
-        address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-        name: "Michael Levi",
-        specialization: "Pulmonologist",
-        years : "5",
-        rating : "4.2",
-        status: 'Completed',
-        date: "24/12/08",
-        time: "7:30 PM",
-        clinicName: "XYZ Clinic",
-        address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-      {
-        name: "Richard Gran",
-        specialization: "Pulmonologist",
-        years : "5",
-        rating : "4.2",
-        status: 'Completed',
-        date: "04/10/21",
-        time: "7:30 PM",
-        clinicName: "XYZ Clinic",
-        address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-      {
-          name: "Richard Gran",
-          specialization: "Pulmonologist",
-          years : "5",
-          rating : "4.2",
-          status: 'Rejected',
-          date: "04/10/21",
-          time: "7:30 PM",
-          clinicName: "XYZ Clinic",
-          address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-      {
-        name: "Michael Levi",
-        specialization: "Pulmonologist",
-        years : "5",
-        rating : "4.2",
-        status: 'Completed',
-        date: "24/12/08",
-        time: "7:30 PM",
-        clinicName: "XYZ Clinic",
-        address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-      {
-        name: "Richard Gran",
-        specialization: "Pulmonologist",
-        years : "5",
-        rating : "4.2",
-        status: 'Completed',
-        date: "04/10/21",
-        time: "7:30 PM",
-        clinicName: "XYZ Clinic",
-        address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-      {
-          name: "Richard Gran",
-          specialization: "Pulmonologist",
-          years : "5",
-        rating : "4.2",
-          status: 'Rejected',
-          date: "04/10/21",
-          time: "7:30 PM",
-          clinicName: "XYZ Clinic",
-          address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-  ];
    
   export const  Pat_Appointment=()=>{
+    const navigate=useNavigate();
     const [loading,setLoading]=useState(true);
     const [appointments,setAppointments]=useState<appointmentType[]>([]);
     const [doclist,setDoclist]=useState<{[key:string]:doctorFullInfotype}>({});
     const [status,setStatus]=useState<{[key:string]:string}>({});
     const [city,setCity]=useState<{[key:string]:string}>({});
     const [country,setCountry]=useState<{[key:string]:string}>({});
+    const currentdate=new Date();
 
     useEffect(()=>{
       axios.get(`${BACKEND_URL}/api/v1/patient/book/offline/appointments`,{
@@ -221,10 +93,18 @@ export function convert(spl: string): string{
         }
       }).then((res)=>{
         //console.log(res.data);
-        setAppointments(res.data);
+        const sortedAppointments = res.data.sort((a:appointmentType, b:appointmentType) => {
+          // Convert appointment_date strings to Date objects
+          const dateA = new Date(a.appointment_date).getTime();
+          const dateB = new Date(b.appointment_date).getTime();
+          // Compare appointment dates
+          return dateB - dateA;
+        });
+        setAppointments(sortedAppointments);
         setLoading(false);
       })
     },[]);
+    
     
     useEffect(() => {
       const fetchDoctors = async (docId: string) => {
@@ -295,25 +175,31 @@ export function convert(spl: string): string{
       // Return the formatted time
       return hours + ":" + minutes + " " + period;
     }
-    // async function fetchAddress(latitude:number,longitude:number){
-    //   const response = await axios.get(`https://api-bdc.net/data/reverse-geocode?latitude=${latitude}&longitude=${longitude}&localityLanguage=en&key=bdc_2ea2200a8bec4bf69c4d4534c535f042`);
-    //   const address=response.data;
-    //   setAddress(c=>({
-    //     ...c,
-    //     city:response.data.city,
-    //     locality:response.data.locality,
-    //     postcode:response.data.postcode,
-    //     countryName:response.data.countryName
-    //   }));
-    // }
-    // function printAddress(latitude:number,longitude:number):string{
-    //   fetchAddress(latitude,longitude);
-    //   if(address){
-    //     return `${address.locality}, ${address.city}, ${address.countryName}, ${address.postcode}`;
-    //   }else{
-    //     return "...";
-    //   }
-    // }
+    function feedback_button(appointment_date:string):boolean{
+      const date=new Date(appointment_date);
+      const thirtyDaysInMilliseconds = 30 * 24 * 60 * 60 * 1000;
+      const differenceInMilliseconds = currentdate.getTime() - date.getTime();
+      if(differenceInMilliseconds<=thirtyDaysInMilliseconds) return true;
+      else return false;
+    }
+    async function handleDelete(appointmentid:string){
+      try{
+        const response=await axios.delete(`${BACKEND_URL}/api/v1/patient/book/offline/delete/${appointmentid}`,{
+          headers:{
+            'Authorization':`Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        const json=response.data;
+        if(json.message){
+          alert(json.message);
+        }
+        window.location.reload();
+      }catch(e){
+        console.error("Error deleting appointment",e);
+      }
+
+    }
+
     if(loading){
       return <div>Loading...</div>
     }
@@ -373,7 +259,7 @@ export function convert(spl: string): string{
                             </Typography>
                             <Typography
                               className="font-sans font-semibold text-violet-900 opacity-65 text-[13px]"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                        >
-                              {doclist[appointment.doctorId].experience} Years of Experience | Rating: {doclist[appointment.doctorId].rating} / 5.0
+                              {doclist[appointment.doctorId].experience} Years of Experience | Rating: {doclist[appointment.doctorId].rating.toFixed(1)} / 5.0
                             </Typography>
                           </div>
                         </div>
@@ -405,7 +291,7 @@ export function convert(spl: string): string{
                           color="blue-gray"
                           className="font-sans font-semibold flex"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
                           <Clock10Icon className="h-5 w-5 mr-1.5 mt-0.5" />
-                          {status[appointment.id] === 'Confirmed' || status[appointment.id] === 'Completed' ? `${fetchdate(appointment.appointment_date)} | ${fetchtime(appointment.appointment_time)}` : '--'}
+                          {status[appointment.id] === 'Confirmed' || status[appointment.id] === 'Completed' ? `${fetchdate(appointment.appointment_date)} | ${fetchtime(appointment.appointment_time)}` : `${fetchdate(appointment.appointment_date)} | --`}
                         </Typography>
                       </td>
                       <td className={classes}>
@@ -420,13 +306,21 @@ export function convert(spl: string): string{
                         </Typography>
                       </td>
                       <td className={classes + ' items-center content-center align-middle justify-center'}>
-                        {(status[appointment.id] === 'Pending') &&
-                          <Tooltip content="Cancel Appointment">
-                            <IconButton variant="text" className="hover:scale-110 justify-center"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                              <BookX className="flex h-5 w-5 mx-3 align-middle"/>
-                            </IconButton>
-                          </Tooltip>}
-                      </td>
+                    {(status[appointment.id] === 'Pending') &&
+                      <button className="hover:scale-110 h-4 justify-center flex flex-row "onClick={()=>handleDelete(appointment.id)}>
+                      <BookX className="h-4 w-5 mx-3 align-middle"/>
+                      <div>Cancel Slot</div>
+                    </button>}
+                      {(status[appointment.id] === 'Completed' && feedback_button(appointment.appointment_date)) &&
+                      <button  className="hover:scale-110 justify-center h-4 flex flex-row " onClick={()=>{
+                        if(!appointment.feedback_given){
+                          navigate(`/pat/feedback/${appointment.id}`)
+                        }
+                        }}>
+                      <NewspaperIcon className="h-4 w-5 mx-3 align-middle"/>
+                      <div>{appointment.feedback_given==true?"Feedback Done!":"Give Feedvack"}</div>
+                    </button>}
+                  </td>
                     </tr>
                   );
                 },

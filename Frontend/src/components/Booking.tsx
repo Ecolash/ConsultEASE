@@ -73,7 +73,7 @@ export const  Booking:React.FC<booktype>=(props)=>{
              {props.specialization}
             </div>
             <p className="absolute top-[132px] w-full font-sans font-bold text-white text-[15px] text-center tracking-[0] leading-[21.0px] whitespace-nowrap">
-              Overall Rating : {props.rating} / 5.0
+              Overall Rating : {props.rating.toFixed(1)} / 5.0
             </p>
             <p className="absolute top-[466px] w-full font-sans font-bold text-white text-[18px] text-center tracking-[0] leading-[25.2px] whitespace-nowrap">
               <span className="font-sans font-bold text-white text-[18px] tracking-[0] leading-[25.2px]">

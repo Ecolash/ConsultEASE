@@ -4,7 +4,7 @@ import { useState,useEffect } from "react";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
 import { Clock4,  HomeIcon,  Info, LayoutDashboard,  Settings,  UserCircle } from 'lucide-react';
-import { doctorFullInfo, doctorFullInfotype } from "../InputTypes/info";
+import { doctorFullInfotype } from "../InputTypes/info";
 
 export const Doc_Profile=()=>{
     const [loading,setLoading]=useState(true);
@@ -21,7 +21,8 @@ export const Doc_Profile=()=>{
         clinic: "",
         fee: 0,
         clinic_days: [],
-        rating:0
+        rating:0,
+        password:""
     });
     useEffect(()=>{
         axios.get(`${BACKEND_URL}/api/v1/doctor/details/get`,{
@@ -43,6 +44,7 @@ export const Doc_Profile=()=>{
             clinic: res.data.clinic,
             fee: res.data.fee,
             clinic_days: res.data.clinic_days,
+            password: res.data.password
           }));
           setLoading(false);
         })
@@ -55,8 +57,8 @@ export const Doc_Profile=()=>{
             <hr className='my-2'/>
             <SidebarItem icon = {<HomeIcon size={20} />} text ='Home'  path="/doc/dashboard"/>
             <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' active path="/doc/profile"/>
-            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard' path="/#"/> 
-            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' path="/#" /> 
+            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='View Feedback' path="/doc/feedbacks"/> 
+            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' path="/doc/appointments" /> 
             <hr className='my-3'/>
             <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="#"/>
             <SidebarItem icon = {<Info size={20} />} text ='About' path="#"/>
@@ -74,6 +76,7 @@ export const Doc_Profile=()=>{
                     fee={docDetails.fee}
                     clinic_days={docDetails.clinic_days}
                     rating={docDetails.rating}
+                    password={docDetails.password}
                     />
     </div>
 }

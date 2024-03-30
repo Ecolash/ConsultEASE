@@ -38,7 +38,7 @@ export const PatAppointments=()=>{
             <Sidebar name={patIntro.name} email={patIntro.email}>
                 <hr className='my-2'/>
                 <SidebarItem icon = {<HomeIcon size={20} />} text ='Home'  path="/pat/dashboard"/>
-                <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/#"/>
+                <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/pat/profile"/>
                 <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard' path="/#"/> 
                 <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' active path="/pat/appointments"/> 
                 <hr className='my-3'/>

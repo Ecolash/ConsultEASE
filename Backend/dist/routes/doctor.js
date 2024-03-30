@@ -35,3 +35,19 @@ exports.docRouter.get('/get/:id', (req, res) => __awaiter(void 0, void 0, void 0
         return res.json({ error: "Database Issue" });
     }
 }));
+exports.docRouter.get('/feedback/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const appointmentid = req.params.id;
+    try {
+        const appointment = yield prisma.offline_Appointment.findFirst({
+            where: {
+                id: appointmentid
+            }
+        });
+        return res.json(appointment);
+    }
+    catch (e) {
+        console.log(e);
+        res.status(403);
+        return res.json({ error: "Database Issue" });
+    }
+}));

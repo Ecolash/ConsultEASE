@@ -47,6 +47,57 @@ dashRouter.get('/', async (req:Request, res:Response)=>{
     }
 });
 
+dashRouter.get('/feedback', async (req:Request, res:Response)=>{
+    const doctorId=res.get('doctorId');
+    try{
+        const appointments=await prisma.offline_Appointment.findMany({
+            where:{
+                doctorId:doctorId,
+                feedback_given:true
+            }
+        })
+        return res.json(appointments);
+    }catch(e){
+        console.log(e);
+        res.status(403);
+        return res.json({error:"Database Issue"});
+    }
+});
+
+dashRouter.get('/all',async(req:Request, res:Response)=>{
+    const doctorId=res.get('doctorId');
+    try{
+        const appointments=await prisma.offline_Appointment.findMany({
+            where:{
+                doctorId:doctorId,
+                confirmed:true
+            }
+        });
+        const currentdate=new Date();
+        const appointmentstoUpdate=appointments.filter(appointment=>new Date(appointment.appointment_date)<currentdate);
+        await prisma.offline_Appointment.updateMany({
+            where:{
+                id:{
+                    in:appointmentstoUpdate.map(appointment=>appointment.id)
+                }
+            },
+            data:{
+                completed:true
+            }
+        });
+        const updatedAppointments=await prisma.offline_Appointment.findMany({
+            where:{
+                doctorId:doctorId
+            }
+        });
+        return res.json(updatedAppointments);
+    }catch(e){
+        console.log(e);
+        res.status(403);
+        return res.json({error:"Database Issue"});
+    }
+})
+
 dashRouter.post('/:id/confirm',async (req:Request,res:Response)=>{
     const appointmentId=req.params.id;
     const time=req.body.time;

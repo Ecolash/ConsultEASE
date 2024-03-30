@@ -76,9 +76,27 @@ exports.bookRouter.get('/offline/appointments', (req, res) => __awaiter(void 0, 
     const patientId = res.get('patientId');
     try {
         const appointments = yield prisma.offline_Appointment.findMany({
-            where: { patientId: patientId },
+            where: { patientId: patientId,
+                confirmed: true }
         });
-        return res.json(appointments);
+        const currentdate = new Date();
+        const appointmentstoUpdate = appointments.filter(appointment => new Date(appointment.appointment_date) < currentdate);
+        yield prisma.offline_Appointment.updateMany({
+            where: {
+                id: {
+                    in: appointmentstoUpdate.map(appointment => appointment.id)
+                }
+            },
+            data: {
+                completed: true
+            }
+        });
+        const updatedAppointments = yield prisma.offline_Appointment.findMany({
+            where: {
+                patientId: patientId
+            }
+        });
+        return res.json(updatedAppointments);
     }
     catch (e) {
         console.log(e);
@@ -118,6 +136,47 @@ exports.bookRouter.post('/offline/appointments/:id', (req, res) => __awaiter(voi
                 numRatings: numRatings + 1
             }
         });
+    }
+    catch (e) {
+        console.log(e);
+        res.status(403);
+        return res.json({ error: "Database Issue" });
+    }
+}));
+exports.bookRouter.post('/offline/feedback/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const appointmentId = req.params.id;
+    const body = req.body;
+    try {
+        yield prisma.offline_Appointment.update({
+            where: {
+                id: appointmentId
+            },
+            data: {
+                feedback_given: true,
+                punctuality: body.punctuality,
+                Comfort: body.comfort,
+                Communication: body.communication,
+                clarity: body.clarity,
+                Comments: body.comments
+            }
+        });
+        return res.json({ message: "Thanks for the feedback" });
+    }
+    catch (e) {
+        console.log(e);
+        res.status(403);
+        return res.json({ error: "Database Issue" });
+    }
+}));
+exports.bookRouter.delete('/offline/delete/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const appointmentId = req.params.id;
+    try {
+        yield prisma.offline_Appointment.delete({
+            where: {
+                id: appointmentId
+            }
+        });
+        return res.json({ message: "Appointment Cancelled" });
     }
     catch (e) {
         console.log(e);

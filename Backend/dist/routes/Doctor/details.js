@@ -38,7 +38,7 @@ exports.detailsRouter.use('/*', (req, res, next) => __awaiter(void 0, void 0, vo
         next();
     }
     catch (e) {
-        res.status(403);
+        res.status(408);
         return res.json({
             message: "Not logged in"
         });
@@ -92,7 +92,6 @@ exports.detailsRouter.put('/update', (req, res) => __awaiter(void 0, void 0, voi
         yield prisma.doctor.update({
             where: { id: doctorId },
             data: {
-                name: body.name,
                 password: body.password,
                 mobile: body.mobile,
                 age: body.age,
@@ -103,7 +102,7 @@ exports.detailsRouter.put('/update', (req, res) => __awaiter(void 0, void 0, voi
                 experience: body.experience,
                 clinic: body.clinic,
                 fee: body.fee,
-                clinic_days: body.clinic_daysg
+                clinic_days: body.clinic_days
             }
         });
         return res.json({ message: "Successfully Updated" });

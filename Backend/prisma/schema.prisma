@@ -53,6 +53,12 @@ model Offline_Appointment{
   doctorId String 
   Symptoms String?
   feedback Float?
+  feedback_given Boolean @default(false)
+  punctuality String?
+  clarity String?
+  Comfort String?
+  Communication String?
+  Comments String?
   rejected Boolean @default(false)
   completed Boolean @default(false)
   confirmed Boolean @default(false)

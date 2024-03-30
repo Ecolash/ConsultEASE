@@ -24,6 +24,21 @@ export const doctorInfo=z.object({
 
 })
 export type doctorInfotype=z.infer<typeof doctorInfo>;
+export const docUpdate=z.object({
+    mobile:z.string().min(10).max(10),
+    password:z.string().min(8),
+    age:z.number().int(),
+    gender:z.string(),
+    latitude:z.number(),
+    longitude:z.number(),
+    specialization:z.string(),
+    experience:z.string(),
+    clinic:z.string(),
+    fee:z.number(),
+    clinic_days:z.array(z.string())
+})
+export type doctorUpdateType=z.infer<typeof docUpdate>;
+
 
 export const doctorFullInfo=z.object({
     mobile:z.string().min(10).max(10),
@@ -38,6 +53,30 @@ export const doctorFullInfo=z.object({
     clinic_days:z.array(z.string()),
     name:z.string(),
     email:z.string().email(),
-    rating:z.number()
+    rating:z.number(),
+    password:z.string().min(8)
 })
 export type doctorFullInfotype=z.infer<typeof doctorFullInfo>;
+
+export const patientFullInfo=z.object({
+    mobile:z.string().min(10).max(10),
+    age:z.number().int(),
+    gender:z.string(),
+    latitude:z.number(),
+    longitude:z.number(),
+    name:z.string(),
+    email:z.string().email(),
+    password:z.string().min(8)
+})
+
+export type patientFullInfotype=z.infer<typeof patientFullInfo>;
+
+export const patientUpdate=z.object({
+    mobile:z.string().min(10).max(10),
+    password:z.string().min(8),
+    age:z.number().int(),
+    gender:z.string(),
+    latitude:z.number(),
+    longitude:z.number(),
+})
+export type patientUpdateType=z.infer<typeof patientUpdate>;

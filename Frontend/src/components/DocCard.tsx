@@ -35,7 +35,7 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
   });
 
   return (
-    <div className="w-[482px] h-[139px] mx-10 my-3 flex-wrap z-0">
+    <div className="w-[482px] h-[139px] mx-10 my-3 flex-wrap ">
       <div className="w-[482px] h-[139px] top-0 left-0">
         <div className="relative h-[139px] rounded-[15px] ">
           <div className="w-[482px] h-[145px] left-0 bg-violet-100 rounded-[15px] border-violet-300 border-2 absolute top-0 overflow-hidden hover:bg-violet-200">
@@ -69,7 +69,7 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
               <div className="relative w-[75px] h-[25px]">
                 <div className="absolute w-[72px] h-[25px] top-0 left-0 bg-[#03c04a] rounded-[5px]" />
                 <div className="absolute w-[65px] top-[2px] left-[10px] font-sans font-bold text-white text-[14px] tracking-[0] leading-[19.6px] whitespace-nowrap">
-                 {props.rating} / 5.0
+                 {props.rating.toFixed(1)} / 5.0
                 </div>
               </div>
             </div>

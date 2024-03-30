@@ -60,6 +60,57 @@ exports.dashRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.json({ error: "Database Issue" });
     }
 }));
+exports.dashRouter.get('/feedback', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const doctorId = res.get('doctorId');
+    try {
+        const appointments = yield prisma.offline_Appointment.findMany({
+            where: {
+                doctorId: doctorId,
+                feedback_given: true
+            }
+        });
+        return res.json(appointments);
+    }
+    catch (e) {
+        console.log(e);
+        res.status(403);
+        return res.json({ error: "Database Issue" });
+    }
+}));
+exports.dashRouter.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const doctorId = res.get('doctorId');
+    try {
+        const appointments = yield prisma.offline_Appointment.findMany({
+            where: {
+                doctorId: doctorId,
+                confirmed: true
+            }
+        });
+        const currentdate = new Date();
+        const appointmentstoUpdate = appointments.filter(appointment => new Date(appointment.appointment_date) < currentdate);
+        yield prisma.offline_Appointment.updateMany({
+            where: {
+                id: {
+                    in: appointmentstoUpdate.map(appointment => appointment.id)
+                }
+            },
+            data: {
+                completed: true
+            }
+        });
+        const updatedAppointments = yield prisma.offline_Appointment.findMany({
+            where: {
+                doctorId: doctorId
+            }
+        });
+        return res.json(updatedAppointments);
+    }
+    catch (e) {
+        console.log(e);
+        res.status(403);
+        return res.json({ error: "Database Issue" });
+    }
+}));
 exports.dashRouter.post('/:id/confirm', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const appointmentId = req.params.id;
     const time = req.body.time;

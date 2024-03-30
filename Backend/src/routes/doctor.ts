@@ -21,3 +21,19 @@ docRouter.get('/get/:id',async(req:Request,res:Response)=>{
         return res.json({error:"Database Issue"});
     }
 })
+
+docRouter.get('/feedback/:id',async(req:Request,res:Response)=>{
+    const appointmentid=req.params.id;
+    try{
+        const appointment=await prisma.offline_Appointment.findFirst({
+            where:{
+                id:appointmentid
+            }
+        });
+        return res.json(appointment);
+    }catch(e){
+        console.log(e);
+        res.status(403);
+        return res.json({error:"Database Issue"});
+    }
+})

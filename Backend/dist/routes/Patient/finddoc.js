@@ -58,6 +58,7 @@ exports.findDocRouter.use('/*', (req, res, next) => __awaiter(void 0, void 0, vo
     }
 }));
 exports.findDocRouter.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filter = req.query.filter;
     const patientId = res.get('patientId');
     const patient = yield prisma.patient.findFirst({
         where: { id: patientId },
@@ -70,20 +71,44 @@ exports.findDocRouter.get('/all', (req, res) => __awaiter(void 0, void 0, void 0
         return res.status(404).send("Not Logged In");
     }
     const { latitude: patientLat, longitude: patientLon } = patient;
-    const doctors = yield prisma.doctor.findMany({
-        select: {
-            id: true,
-            name: true,
-            latitude: true,
-            longitude: true,
-            specialization: true,
-            experience: true,
-            clinic: true,
-            rating: true,
-            fee: true,
-            clinic_days: true
-        }
-    });
+    let doctors;
+    if (filter != "") {
+        doctors = yield prisma.doctor.findMany({
+            where: {
+                name: {
+                    contains: filter
+                }
+            },
+            select: {
+                id: true,
+                name: true,
+                latitude: true,
+                longitude: true,
+                specialization: true,
+                experience: true,
+                clinic: true,
+                rating: true,
+                fee: true,
+                clinic_days: true
+            }
+        });
+    }
+    else {
+        doctors = yield prisma.doctor.findMany({
+            select: {
+                id: true,
+                name: true,
+                latitude: true,
+                longitude: true,
+                specialization: true,
+                experience: true,
+                clinic: true,
+                rating: true,
+                fee: true,
+                clinic_days: true
+            }
+        });
+    }
     if (!patientLat || !patientLon) {
         return res.json(doctors);
     }

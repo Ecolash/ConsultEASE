@@ -1,17 +1,20 @@
 import { Sidebar } from "../components/Sidebar"
 import { SidebarItem } from "../components/Sidebar"
+import { Clock4,  HomeIcon,  Info, LayoutDashboard,  Settings,  UserCircle } from 'lucide-react';
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
-import { DocTypes } from "../components/DocTypes";
-import {SearchBox} from "../components/Searchbox";
-import { Clock4,  HomeIcon,  Info, LayoutDashboard,  Settings,  UserCircle } from 'lucide-react';
+import { useParams } from "react-router-dom";
+import { FeedbackForm } from "../components/Feedback";
+
 
 type basicInfo={
     email:string,
     name:string,
 }
-export const PatDash=()=>{
+
+export const Give_Feedback=()=>{
+    const {id}=useParams();
     const [loading,setLoading]=useState(true);
     const [patIntro,setPatIntro]=useState<basicInfo>({
         email:"",
@@ -37,15 +40,14 @@ export const PatDash=()=>{
     return <div className="flex flex-center align start">
         <Sidebar name={patIntro.name} email={patIntro.email}>
             <hr className='my-2'/>
-            <SidebarItem icon = {<HomeIcon size={20} />} text ='Home' active path="/pat/dashboard"/>
-            <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/pat/profile"/>
+            <SidebarItem icon = {<HomeIcon size={20} />} text ='Home'  path="/pat/dashboard"/>
+            <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/#"/>
             <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard' path="/#"/> 
-            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' path="/pat/appointments"/> 
+            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' active path="/pat/appointments"/> 
             <hr className='my-3'/>
             <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="/#"/>
             <SidebarItem icon = {<Info size={20} />} text ='About' path="/#"/>
         </Sidebar>
-        <DocTypes />  
-        <SearchBox />
+        <FeedbackForm appointmentid={id as string} />  
     </div>
 }

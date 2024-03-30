@@ -44,6 +44,7 @@ findDocRouter.use('/*',async(req:Request,res:Response,next:NextFunction)=>{
     }
 })
 findDocRouter.get('/all',async (req:Request, res:Response)=>{
+    const filter=req.query.filter;
     const patientId=res.get('patientId');
     const patient=await prisma.patient.findFirst({
         where:{id:patientId},
@@ -56,21 +57,45 @@ findDocRouter.get('/all',async (req:Request, res:Response)=>{
         return res.status(404).send("Not Logged In");
     }
     const { latitude:patientLat,longitude:patientLon }=patient;
+    let doctors;
 
-    const doctors=await prisma.doctor.findMany({
-        select:{
-            id:true,
-            name:true,
-            latitude:true,
-            longitude:true,
-            specialization:true,
-            experience:true,
-            clinic:true,
-            rating:true,
-            fee:true,
-            clinic_days:true
-        }
-    });
+    if(filter!=""){
+        doctors=await prisma.doctor.findMany({
+            where:{
+                name:{
+                    contains:(filter as string)
+                }
+            },
+            select:{
+                id:true,
+                name:true,
+                latitude:true,
+                longitude:true,
+                specialization:true,
+                experience:true,
+                clinic:true,
+                rating:true,
+                fee:true,
+                clinic_days:true
+            }
+        });
+    }
+    else{
+        doctors=await prisma.doctor.findMany({
+            select:{
+                id:true,
+                name:true,
+                latitude:true,
+                longitude:true,
+                specialization:true,
+                experience:true,
+                clinic:true,
+                rating:true,
+                fee:true,
+                clinic_days:true
+            }
+        });
+    }
     if(!patientLat || !patientLon) {
         return res.json(doctors);
     }

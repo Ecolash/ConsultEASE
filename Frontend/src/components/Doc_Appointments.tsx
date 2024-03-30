@@ -248,7 +248,7 @@ type addressType={
             <div className="flex items-center justify-between ">
               <div>
                 <Typography className="text-[20px] font-sans font-bold text-violet-900"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                  Requested Appointments
+                  Pending Appointments
                 </Typography>
                 <Typography color="gray" className="font-sans"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
                   Confirm or reject appointments for patient

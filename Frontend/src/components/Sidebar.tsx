@@ -10,6 +10,7 @@ const SidebarContext = createContext<SidebarContextType|null>(null);
 
 export const Sidebar=({ children,name,email }:{children:ReactNode,name:string,email:string})=>{
   const [expanded, setExpanded] = useState(true);
+  const [toggle,setToggle] = useState(false);
 
   return (
     <SidebarContext.Provider value={{ expanded, setExpanded }}>
@@ -45,7 +46,20 @@ export const Sidebar=({ children,name,email }:{children:ReactNode,name:string,em
                 <h4 className="font-semibold">{name}</h4>
                 <span className="text-xs text-gray-600">{email}</span>
               </div>
-              <MoreVertical size={20} />
+              {/* <MoreVertical size={20} /> */}
+              <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none  focus:ring-gray-50 " onClick={()=>setToggle(c=>!c)} type="button">
+                <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+                <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+                </svg>
+              </button>
+              {toggle &&
+              <div id="dropdownDots" className="z-10  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 absolute bottom-14 left-24">
+              
+              <div className="py-2">
+                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100  ">Separated link</a>
+              </div>
+          </div>}
+                
             </div>
           </div>
         </nav>
