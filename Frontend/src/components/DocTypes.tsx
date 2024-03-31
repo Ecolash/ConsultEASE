@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 export const DocTypes=()=>{
   const navigate=useNavigate();
   return (
-    <div className={`relative w-[536px] h-[720px] mx-5 my-16 rounded-[15px] shadow-[0px_4px_4px_#00000040] bg-violet-50`}>
-      <div className="absolute w-[498px] h-[596px] top-[58px] left-[19px]">
+    <div className={`relative w-[536px] h-[780px] mx-5 my-4 rounded-[15px] bg-violet-50`}>
+      <div className="absolute w-[498px] h-[596px] top-[120px] left-[19px]">
         <div className="absolute w-[497px] h-[137px] my-5 top-0 left-px">
           <div className="top-0 left-[129px] flex w-[110px] h-[135px] items-center justify-center gap-[8px] p-[10px] absolute bg-violet-100 rounded-[8px] shadow-button-shadow">
             <div className="relative w-[92.5px] h-[110.5px] ml-[-0.25px] mr-[-2.25px]">
@@ -238,7 +238,7 @@ export const DocTypes=()=>{
           </div>
         </div>
       </div>
-      <div className="absolute w-[535px] h-[39px] top-[5px] left-0 font-sans font-bold text-violet-900 text-[30px] text-center tracking-[0] leading-[45px] whitespace-nowrap">
+      <div className="absolute w-[535px] h-[39px] top-[25px] left-0 font-sans font-bold text-violet-900 text-[30px] text-center tracking-[0] leading-[45px] whitespace-nowrap">
         Choose Doctor Speciality
       </div>
     </div>

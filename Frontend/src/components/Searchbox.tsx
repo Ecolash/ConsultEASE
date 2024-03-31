@@ -41,7 +41,7 @@ export const SearchBox=()=>{
         }
     }
     return (
-        <div className='bg-indigo-50 h-screen flex flex-col flex-grow items-center z-0'>
+        <div className='bg-violet-50 h-screen flex flex-col flex-grow items-center z-0'>
             <div className="flex flex-row items-center my-4">
                         <div className="flex border-none px-2 py-3 border-violet-200 rounded">
                             <input
@@ -57,7 +57,7 @@ export const SearchBox=()=>{
                             </button>
                         </div>
             </div>
-            <div className='overflow-y-scroll h-[670px] w-[500px] z-0 rounded-2xl flex flex-col no-scrollbar items-center my-2 border-violet-900 border bg-indigo-100 shadow-sm'>
+            <div className='overflow-y-scroll h-[670px] w-[500px] z-0 rounded-2xl flex flex-col no-scrollbar items-center my-2 border-violet-900 border bg-violet-100 shadow-sm'>
                             {doctors.map(doctor=>
                                 
                                 <DocCard key={doctor.id}

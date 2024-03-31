@@ -1,6 +1,7 @@
-import { MoreVertical, ChevronLast, ChevronFirst, CircleUser } from "lucide-react";
+import {  ChevronLast, ChevronFirst, CircleUser } from "lucide-react";
 import {ReactNode, useContext, createContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarContextType {
   expanded: boolean;
@@ -9,8 +10,14 @@ interface SidebarContextType {
 const SidebarContext = createContext<SidebarContextType|null>(null);
 
 export const Sidebar=({ children,name,email }:{children:ReactNode,name:string,email:string})=>{
+  const navigate=useNavigate();
   const [expanded, setExpanded] = useState(true);
   const [toggle,setToggle] = useState(false);
+
+  function LogOut(){
+    localStorage.removeItem('token');
+    navigate('/auth');
+  }
 
   return (
     <SidebarContext.Provider value={{ expanded, setExpanded }}>
@@ -53,10 +60,10 @@ export const Sidebar=({ children,name,email }:{children:ReactNode,name:string,em
                 </svg>
               </button>
               {toggle &&
-              <div id="dropdownDots" className="z-10  bg-white divide-y divide-gray-100 rounded-lg shadow w-44 absolute bottom-14 left-24">
+              <div id="dropdownDots" className="z-10  bg-white divide-y divide-gray-100 rounded-lg shadow w-auto absolute bottom-14 left-40" onClick={LogOut}>
               
-              <div className="py-2">
-                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100  ">Separated link</a>
+              <div className="py-2 px-3 w-auto">
+                <button className="block px-4 py-2 text-sm text-gray-700 font-sans font-semibold w-auto hover:bg-gray-100  ">Log Out</button>
               </div>
           </div>}
                 

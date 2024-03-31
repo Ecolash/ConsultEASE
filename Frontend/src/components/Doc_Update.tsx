@@ -43,6 +43,12 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
     saturday:false,
     sunday:false
   });
+  const [selectedFile, setSelectedFile] = useState<File|null>(null);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setSelectedFile(event.target.files[0]);
+    } 
+  };
   const [address,setAddress] =useState("Loading...");
   const [updatelocation,setUpdateLocation]=useState(false);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
@@ -252,16 +258,28 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
       <div className="w-full h-screen">
         <div className="relative h-screen overflow-hidden bg-violet-100">
           <div className="absolute w-[380px] h-full top-0 left-0 bg-violet-800 items-center">
-            <img
+          <img
               className="absolute w-[275px] h-[275px] top-[200px] left-[50px] object-cover rounded-full align-middle"
               alt="Profile"
-              src="/profile.png"
+              src={selectedFile ? URL.createObjectURL(selectedFile) : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRripLcqGUKIBfgbtmux6U1UY9UkgezqzJzFw&usqp=CAU"}
             />
-            <button className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[500px] left-[117px] bg-violet-500 flex items-center gap-[16px] rounded-[10px] border-none hover:scale-105 hover:bg-violet-500]">
-              <div className="relative w-[380px] mt-[-3.00px] mb-[-1.00px] text-white text-[14px] text-center whitespace-nowrap font-sans font-bold">
-                Change Photo
+            <div className="mt-4">
+              <div className="mt-1 flex items-center">
+                <input
+                  type="file"
+                  className="sr-only"
+                  id="profile_photo"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+                <label
+                  htmlFor="profile_photo"
+                  className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[500px] left-[117px] font-sans font-bold inline-flex text-[15px] text-center whitespace-nowrap items-center text-violet-900 bg-violet-400 gap-[16px] rounded-[10px] hover:scale-105 hover:bg-violet-600"
+                >
+                  Select Photo
+                </label>
               </div>
-            </button>
+            </div>
             <button className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[550px] left-[117px] bg-red-500 flex items-center gap-[16px] rounded-[10px] border-none hover:scale-105 hover:bg-violet-500]">
               <div className="relative w-[380px] mt-[-3.00px] mb-[-1.00px] text-white text-[14px] text-center whitespace-nowrap font-sans font-bold">
                 Remove Photo
