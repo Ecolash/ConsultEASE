@@ -94,6 +94,7 @@ export const Authentication=()=>{
   return (
     <>
     {/* <Alert alt = {alert} /> */}
+    <div className="flex justify-center items-center h-screen w-screen bg-cover bg-center" style={{backgroundImage: `url('https://media.istockphoto.com/id/532963888/photo/medical-or-science-with-soft-light-background.webp?b=1&s=170667a&w=0&k=20&c=KVuJwHqf-BYyhYT4wGc0iISYAY1Cw6-KdcTc7GgGmDg=')`}}>
     <div className ='flex flex-col items-center	'>
       <Components.Container>
               <Components.SignUpContainer signinIn={signIn}>
@@ -175,6 +176,7 @@ export const Authentication=()=>{
 
           </Components.Container>
     </div> 
+    </div>
   </>
   );
 }

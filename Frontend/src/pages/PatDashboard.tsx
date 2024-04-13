@@ -5,7 +5,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { DocTypes } from "../components/DocTypes";
 import {SearchBox} from "../components/Searchbox";
-import { Clock4,  HomeIcon,  Info, LayoutDashboard,  Settings,  UserCircle } from 'lucide-react';
+import { Clock4,  HomeIcon,  Info,  PhoneIncoming,  Settings,  UserCircle } from 'lucide-react';
 
 type basicInfo={
     email:string,
@@ -39,8 +39,8 @@ export const PatDash=()=>{
             <hr className='my-2'/>
             <SidebarItem icon = {<HomeIcon size={20} />} text ='Home' active path="/pat/dashboard"/>
             <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/pat/profile"/>
-            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard' path="/#"/> 
-            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' path="/pat/appointments"/> 
+            <SidebarItem icon = {<PhoneIncoming size={20} />} text ='Online Appointments' path="/pat/online_appointments"/> 
+            <SidebarItem icon = {<Clock4 size={20} />} text ='Offline Appointments' path="/pat/appointments"/> 
             <hr className='my-3'/>
             <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="/#"/>
             <SidebarItem icon = {<Info size={20} />} text ='About' path="/#"/>

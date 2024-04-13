@@ -3,7 +3,7 @@ import { Sidebar,SidebarItem } from "../components/Sidebar";
 import { useState,useEffect } from "react";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
-import { Clock4,  HomeIcon,  Info, LayoutDashboard,  Settings,  UserCircle } from 'lucide-react';
+import { CalendarClock,PhoneIncoming, Clock4,  HomeIcon,  Info, LayoutDashboard,    UserCircle } from 'lucide-react';
 import { doctorFullInfotype } from "../InputTypes/info";
 
 export const Doc_Profile=()=>{
@@ -20,6 +20,7 @@ export const Doc_Profile=()=>{
         longitude: 0,
         clinic: "",
         fee: 0,
+        online_fee:0,
         clinic_days: [],
         rating:0,
         password:""
@@ -43,6 +44,7 @@ export const Doc_Profile=()=>{
             longitude: res.data.longitude,
             clinic: res.data.clinic,
             fee: res.data.fee,
+            online_fee:res.data.online_fee,
             clinic_days: res.data.clinic_days,
             password: res.data.password
           }));
@@ -57,12 +59,14 @@ export const Doc_Profile=()=>{
             <hr className='my-2'/>
             <SidebarItem icon = {<HomeIcon size={20} />} text ='Home'  path="/doc/dashboard"/>
             <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' active path="/doc/profile"/>
+            <hr className='my-3' />
             <SidebarItem icon = {<LayoutDashboard size={20} />} text ='View Feedback' path="/doc/feedbacks"/> 
-            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' path="/doc/appointments" /> 
+            <SidebarItem icon = {<PhoneIncoming size={20} />} text ='Online Appointments'  path="/doc/online/appointments" />
+            <SidebarItem icon = {<Clock4 size={20} />} text ='Offline Appointments'  path="/doc/offline/appointments" /> 
             <hr className='my-3'/>
-            <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="#"/>
-            <SidebarItem icon = {<Info size={20} />} text ='About' path="#"/>
-        </Sidebar> 
+            <SidebarItem icon = {<CalendarClock size={20} />} text ='Pending Offline' path="/doc/pending/offline"/>
+            <SidebarItem icon = {<Info size={20} />} text ='Pending Online' path="/doc/pending/online"/>
+        </Sidebar>
         <Doc_Update email={docDetails.email}
                     name={docDetails.name}
                     experience={docDetails.experience}
@@ -74,6 +78,7 @@ export const Doc_Profile=()=>{
                     longitude={docDetails.longitude}
                     clinic={docDetails.clinic}
                     fee={docDetails.fee}
+                    online_fee={docDetails.online_fee}
                     clinic_days={docDetails.clinic_days}
                     rating={docDetails.rating}
                     password={docDetails.password}

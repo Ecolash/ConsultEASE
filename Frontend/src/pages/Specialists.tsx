@@ -7,7 +7,7 @@ import { Sidebar } from "../components/Sidebar"
 import { SidebarItem } from "../components/Sidebar"
 import { DocCard } from "../components/DocCard"
 import { Booking } from "../components/Booking"
-import { Clock4,  HomeIcon,  Info, LayoutDashboard,  Settings,  UserCircle } from 'lucide-react';
+import { Clock4,  HomeIcon,  Info,  PhoneIncoming,  Settings,  UserCircle } from 'lucide-react';
 
 type docsplType={
     id:string,
@@ -19,6 +19,7 @@ type docsplType={
     clinic:string,
     rating:number,
     fee:number,
+    online_fee:number,
     clinic_days:string[],
 }
 type basicInfo={
@@ -112,8 +113,8 @@ export const DocSpl=()=>{
             <hr className='my-2'/>
             <SidebarItem icon = {<HomeIcon size={20} />} text ='Home' active path="/pat/dashboard"/>
             <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/pat/profile"/>
-            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard' path="/#"/> 
-            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' path="/pat/appointments" /> 
+            <SidebarItem icon = {<PhoneIncoming size={20} />} text ='Online Appointments' path="/pat/online_appointments" /> 
+            <SidebarItem icon = {<Clock4 size={20} />} text ='Offline Appointments' path="/pat/appointments" /> 
             <hr className='my-3'/>
             <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="/#" />
             <SidebarItem icon = {<Info size={20} />} text ='About' path="/#" />
@@ -130,6 +131,7 @@ export const DocSpl=()=>{
                                     yoe={doctor.experience}
                                     clinic={doctor.clinic}
                                     fee={doctor.fee}
+                                    online_fee={doctor.online_fee}
                                     clinic_days={doctor.clinic_days}
                                     rating={doctor.rating}
                                     city={fetchCity(doctor)}

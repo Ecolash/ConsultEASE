@@ -60,6 +60,7 @@ exports.detailsRouter.post('/add', (req, res) => __awaiter(void 0, void 0, void 
                 experience: body.experience,
                 clinic: body.clinic,
                 fee: body.fee,
+                online_fee: body.online_fee,
                 clinic_days: body.clinic_days
             }
         });
@@ -102,6 +103,7 @@ exports.detailsRouter.put('/update', (req, res) => __awaiter(void 0, void 0, voi
                 experience: body.experience,
                 clinic: body.clinic,
                 fee: body.fee,
+                online_fee: body.online_fee,
                 clinic_days: body.clinic_days
             }
         });

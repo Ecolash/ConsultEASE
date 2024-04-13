@@ -1,6 +1,6 @@
+import { Pat_Online_appoinments } from "../components/Pat_Online_appointments"
 import { Sidebar } from "../components/Sidebar";
 import { SidebarItem } from "../components/Sidebar";
-import { Pat_Appointment } from "../components/Pat_Appointments";
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
@@ -10,7 +10,7 @@ type basicInfo={
     email:string,
     name:string,
 }
-export const PatAppointments=()=>{
+export const PatOnlineApt=()=>{
     const [loading,setLoading]=useState(true);
     const [patIntro,setPatIntro]=useState<basicInfo>({
         email:"",
@@ -33,19 +33,20 @@ export const PatAppointments=()=>{
     if(loading){
         return <div>Loading...</div>
     }
+
     return (
         <div className="flex justify-center align-middle">
             <Sidebar name={patIntro.name} email={patIntro.email}>
                 <hr className='my-2'/>
                 <SidebarItem icon = {<HomeIcon size={20} />} text ='Home'  path="/pat/dashboard"/>
                 <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/pat/profile"/>
-                <SidebarItem icon = {<PhoneIncoming size={20} />} text ='Online Appointments' path="/pat/online_appointments"/> 
-                <SidebarItem icon = {<Clock4 size={20} />} text ='Offline Appointments' active path="/pat/appointments"/> 
+                <SidebarItem icon = {<PhoneIncoming size={20} />} text ='Online Appointments' active path="/pat/online_appointments"/> 
+                <SidebarItem icon = {<Clock4 size={20} />} text ='Offline Appointments'  path="/pat/appointments"/> 
                 <hr className='my-3'/>
                 <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="/#" />
                 <SidebarItem icon = {<Info size={20} />} text ='About' path="/#" />
             </Sidebar>    
-            <Pat_Appointment />
+            <Pat_Online_appoinments />
         </div>
     )
 }

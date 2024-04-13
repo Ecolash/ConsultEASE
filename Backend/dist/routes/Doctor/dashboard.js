@@ -60,6 +60,23 @@ exports.dashRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.json({ error: "Database Issue" });
     }
 }));
+exports.dashRouter.get('/online', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const doctorId = res.get('doctorId');
+    try {
+        const pending = yield prisma.online_Appointment.findMany({
+            where: {
+                doctorId: doctorId,
+                completed: false
+            }
+        });
+        return res.json(pending);
+    }
+    catch (e) {
+        console.log(e);
+        res.status(403);
+        return res.json({ error: "Database Issue" });
+    }
+}));
 exports.dashRouter.get('/feedback', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const doctorId = res.get('doctorId');
     try {
@@ -111,6 +128,40 @@ exports.dashRouter.get('/all', (req, res) => __awaiter(void 0, void 0, void 0, f
         return res.json({ error: "Database Issue" });
     }
 }));
+exports.dashRouter.get('/online/all', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const doctorId = res.get('doctorId');
+    try {
+        const appointments = yield prisma.online_Appointment.findMany({
+            where: {
+                doctorId: doctorId,
+                confirmed: true
+            }
+        });
+        const currentdate = new Date();
+        const appointmentstoUpdate = appointments.filter(appointment => new Date(appointment.appointment_date) < currentdate);
+        yield prisma.online_Appointment.updateMany({
+            where: {
+                id: {
+                    in: appointmentstoUpdate.map(appointment => appointment.id)
+                }
+            },
+            data: {
+                completed: true
+            }
+        });
+        const updatedAppointments = yield prisma.online_Appointment.findMany({
+            where: {
+                doctorId: doctorId
+            }
+        });
+        return res.json(updatedAppointments);
+    }
+    catch (e) {
+        console.log(e);
+        res.status(403);
+        return res.json({ error: "Database Issue" });
+    }
+}));
 exports.dashRouter.post('/:id/confirm', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const appointmentId = req.params.id;
     const time = req.body.time;
@@ -132,10 +183,52 @@ exports.dashRouter.post('/:id/confirm', (req, res) => __awaiter(void 0, void 0, 
         return res.json({ error: "Database Issue" });
     }
 }));
+exports.dashRouter.post('/:id/online/confirm', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const appointmentId = req.params.id;
+    const time = req.body.time;
+    const link = req.body.link;
+    try {
+        yield prisma.online_Appointment.update({
+            where: {
+                id: appointmentId
+            },
+            data: {
+                appointment_time: time,
+                meeting_link: link,
+                confirmed: true
+            }
+        });
+        return res.json({ message: "Appointment Confirmed" });
+    }
+    catch (e) {
+        console.log(e);
+        res.status(403);
+        return res.json({ error: "Database Issue" });
+    }
+}));
 exports.dashRouter.post('/:id/reject', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const appointmentId = req.params.id;
     try {
         yield prisma.offline_Appointment.update({
+            where: {
+                id: appointmentId
+            },
+            data: {
+                rejected: true
+            }
+        });
+        return res.json({ message: "Appointment Rejected" });
+    }
+    catch (e) {
+        console.log(e);
+        res.status(403);
+        return res.json({ error: "Database Issue" });
+    }
+}));
+exports.dashRouter.post('/:id/online/reject', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const appointmentId = req.params.id;
+    try {
+        yield prisma.online_Appointment.update({
             where: {
                 id: appointmentId
             },

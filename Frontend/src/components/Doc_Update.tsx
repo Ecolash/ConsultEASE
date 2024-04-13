@@ -31,6 +31,7 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
     experience:props.experience,
     clinic:props.clinic,
     fee:props.fee,
+    online_fee:props.online_fee,
     clinic_days:props.clinic_days,
     password:props.password
   });
@@ -172,6 +173,7 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
           experience:docUpdate.experience,
           clinic:docUpdate.clinic,
           fee:docUpdate.fee,
+          online_fee:docUpdate.online_fee,
           clinic_days:clinicdays,
         },{
           headers:{
@@ -201,6 +203,7 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
           experience:docUpdate.experience,
           clinic:docUpdate.clinic,
           fee:docUpdate.fee,
+          online_fee:docUpdate.online_fee,
           clinic_days:clinicdays,
         },{
           headers:{
@@ -421,8 +424,16 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
                   ...c,
                   fee:parseInt(e.target.value)
               }))
-            }} value={isNaN(docUpdate.fee) ? "" : docUpdate.fee.toString()} type="number"/>
-            <input className="w-[224px] h-[30px] px-[16px] py-[2px] absolute top-[400px] left-[333px] bg-white flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0] font-sans font-semibold text-violet-500"  placeholder="Online Consulatation Fee"/>
+             
+            }} value={isNaN(docUpdate.fee) ? "" : docUpdate.fee} type="number"/>
+            <input className="w-[224px] h-[30px] px-[16px] py-[2px] absolute top-[400px] left-[333px] bg-white flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0] font-sans font-semibold text-violet-500"  
+            onChange={(e)=>{
+              setDocUpdate(c=>({
+                  ...c,
+                  online_fee:parseInt(e.target.value)
+              }))
+              console.log(docUpdate.online_fee);
+            }} value={isNaN(docUpdate.online_fee) ? "" : docUpdate.online_fee} type="number"/>
             <button 
               className="w-[183px] h-[32px] px-[16px] py-[8px] absolute top-[560px] left-[218px] bg-violet-400 flex items-center gap-[16px] rounded-[10px] border-none hover:scale-105 hover:bg-violet-500"
               onClick={() => setShowPasswordFields(!showPasswordFields)}

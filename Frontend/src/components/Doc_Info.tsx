@@ -27,6 +27,7 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
     experience:"",
     clinic:"",
     fee:0,
+    online_fee:0,
     clinic_days:[]
   })
   const [days,setDays]=useState<daysAvailable>({
@@ -154,6 +155,7 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
           experience:docInfo.experience,
           clinic:docInfo.clinic,
           fee:docInfo.fee,
+          online_fee:docInfo.online_fee,
           clinic_days:clinicDays
         },{
           headers:{
@@ -164,7 +166,7 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
         if(json.message){
           alert(json.message);
         }
-        navigate('/');
+        navigate('/doc/dashboard');
       }catch(e){
         alert("Can't Update details");
       }
@@ -254,7 +256,13 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
                       fee:parseInt(e.target.value)
                   }))
                 }} placeholder="Offline"/>                
-                <input className="flex w-[132px] items-center gap-[16px] px-[16px] py-[2px] relative self-stretch text-center bg-white font-sans font-semibold text-violet-500 rounded-[10px] border border-solid border-[#e0e0e0]" placeholder="Online"/>  
+                <input className="flex w-[132px] items-center gap-[16px] px-[16px] py-[2px] relative self-stretch text-center bg-white font-sans font-semibold text-violet-500 rounded-[10px] border border-solid border-[#e0e0e0]" 
+                onChange={(e)=>{
+                  setDocInfo(c=>({
+                      ...c,
+                      online_fee:parseInt(e.target.value)
+                  }))
+                }} placeholder="Online"/>  
                 </div>            
               <div className="absolute w-[77px] top-[5px] left-[445px] text-[#8f99f8] text-[14px] leading-[19.6px] [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
                 Rupees(₹)

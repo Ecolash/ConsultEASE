@@ -3,7 +3,7 @@ import { Sidebar,SidebarItem } from "../components/Sidebar";
 import { useState,useEffect } from "react";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
-import { Clock4,  HomeIcon,  Info, LayoutDashboard,  Settings,  UserCircle } from 'lucide-react';
+import { Clock4,  HomeIcon,  Info, PhoneIncoming,  Settings,  UserCircle } from 'lucide-react';
 import { patientFullInfotype } from "../InputTypes/info";
 import { Pat_Update } from "../components/Pat_Update";
 
@@ -47,8 +47,8 @@ export const Pat_Profile=()=>{
             <hr className='my-2'/>
             <SidebarItem icon = {<HomeIcon size={20} />} text ='Home' path="/pat/dashboard"/>
             <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' active path="/pat/profile"/>
-            <SidebarItem icon = {<LayoutDashboard size={20} />} text ='Dashboard' path="/#"/> 
-            <SidebarItem icon = {<Clock4 size={20} />} text ='Appointments' path="/pat/appointments"/> 
+            <SidebarItem icon = {<PhoneIncoming size={20} />} text ='Online Appointments' path="/pat/online_appointments"/> 
+            <SidebarItem icon = {<Clock4 size={20} />} text ='Offline Appointments' path="/pat/appointments"/> 
             <hr className='my-3'/>
             <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="/#"/>
             <SidebarItem icon = {<Info size={20} />} text ='About' path="/#"/>

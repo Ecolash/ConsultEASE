@@ -10,6 +10,7 @@ interface DocCardProps{
   yoe:string,
   clinic:string,
   fee:number,
+  online_fee:number,
   clinic_days:string[],
   rating:number
   city:Promise<string>
@@ -51,14 +52,10 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
                    {props.clinic},{resolvedCity}
                 </div>
               </div>
-              <p className="absolute top-[88px] left-[8px] font-sans font-normal text-transparent text-[13px] tracking-[0] leading-[16.8px] whitespace-nowrap">
-                {daysOfWeek.map(day=>(
-                  <span key={day} className={`${isDayAvailable[day]? 'font-bold':'font-sans'} text-violet-800 mx-1 }`}>{day[0].toUpperCase()}</span>
-                ))}
+              <p className="absolute top-[100px] left-[8px] font-sans font-normal text-transparent text-[15px] tracking-[0] leading-[16.8px] whitespace-nowrap">
+                {daysOfWeek.map(day=>(<span key={day} className={`mx-1 ${isDayAvailable[day] ? 'text-violet-800 font-bold font-sans' : 'text-violet-400 font-sans font-bold'}`}>{day[0].toUpperCase()}</span>
+               ))}
               </p>
-              <div className="absolute top-[108px] left-[7px] font-sans font-bold text-violet-800 text-[14px] tracking-[0] leading-[19.6px] whitespace-nowrap">
-                Consultation Fee: ₹ {props.fee}.00
-              </div>
             </div>
             <img
               className="absolute rounded-2xl w-[126px] h-[129px] top-[5px] left-[8px] object-cover px-2 py-2"
@@ -88,6 +85,7 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
                                         specialization={props.specialization}
                                         rating={props.rating}
                                         fee={props.fee}
+                                        online_fee={props.online_fee}
                                         clinic={props.clinic}
                                         id={props.id}
                                         clinic_days={props.clinic_days} />

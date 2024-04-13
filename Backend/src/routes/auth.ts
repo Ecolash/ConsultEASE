@@ -33,7 +33,7 @@ authRouter.post('/signup',async (req:Request,res:Response)=>{
             })
             const jwtsecret=process.env.JWT_PASSWORD || 'secret';
             const token=jwt.sign({id:patient.id},jwtsecret);
-            return res.json({token});
+            return res.json({jwt:token});
         }
         else{
             const doctor=await prisma.doctor.create({

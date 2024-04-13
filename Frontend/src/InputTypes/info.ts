@@ -20,6 +20,7 @@ export const doctorInfo=z.object({
     experience:z.string(),
     clinic:z.string(),
     fee:z.number(),
+    online_fee:z.number(),
     clinic_days:z.array(z.string())
 
 })
@@ -35,6 +36,7 @@ export const docUpdate=z.object({
     experience:z.string(),
     clinic:z.string(),
     fee:z.number(),
+    online_fee:z.number(),
     clinic_days:z.array(z.string())
 })
 export type doctorUpdateType=z.infer<typeof docUpdate>;
@@ -50,6 +52,7 @@ export const doctorFullInfo=z.object({
     experience:z.string(),
     clinic:z.string(),
     fee:z.number(),
+    online_fee:z.number(),
     clinic_days:z.array(z.string()),
     name:z.string(),
     email:z.string().email(),

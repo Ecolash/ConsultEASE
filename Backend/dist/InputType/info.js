@@ -22,5 +22,6 @@ exports.doctorInfo = zod_1.default.object({
     experience: zod_1.default.string(),
     clinic: zod_1.default.string(),
     fee: zod_1.default.number(),
+    online_fee: zod_1.default.number(),
     clinic_days: zod_1.default.array(zod_1.default.string())
 });

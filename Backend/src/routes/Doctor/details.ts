@@ -47,6 +47,7 @@ detailsRouter.post('/add', async (req:Request, res:Response)=>{
                 experience:body.experience,
                 clinic:body.clinic,
                 fee:body.fee,
+                online_fee:body.online_fee,
                 clinic_days:body.clinic_days
             }
         })
@@ -89,6 +90,7 @@ detailsRouter.put('/update', async (req:Request, res:Response)=>{
                 experience:body.experience,
                 clinic:body.clinic,
                 fee:body.fee,
+                online_fee:body.online_fee,
                 clinic_days:body.clinic_days
             }
         })

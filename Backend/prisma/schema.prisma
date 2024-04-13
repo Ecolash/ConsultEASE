@@ -24,6 +24,7 @@ model Patient{
   latitude Float?
   longitude Float?
   appointments Offline_Appointment[]
+  online_appointments Online_Appointment[]
 }
 
 model Doctor{
@@ -42,8 +43,10 @@ model Doctor{
   rating Float @default(0)
   numRatings Int @default(0)
   fee Int?
+  online_fee Int?
   clinic_days String[]
   appointments Offline_Appointment[]
+  online_appointments Online_Appointment[]
 }
 model Offline_Appointment{
   id String @id @default(uuid())
@@ -64,4 +67,27 @@ model Offline_Appointment{
   confirmed Boolean @default(false)
   appointment_date DateTime @db.Date
   appointment_time String?
+}
+
+model Online_Appointment{
+  id String @id @default(uuid())
+  patient Patient @relation(fields:[patientId],references: [id])
+  patientId String 
+  doctor Doctor @relation(fields:[doctorId],references: [id])
+  doctorId String
+  Symptoms String?
+  feedback Float?
+  feedback_given Boolean @default(false)
+  punctuality String?
+  clarity String?
+  comfort String?
+  communication String?
+  Comments String?
+  rejected Boolean @default(false)
+  completed Boolean @default(false)
+  confirmed Boolean @default(false)
+  appointment_date DateTime @db.Date
+  appointment_time String?
+  meeting_link String?
+  prescription String?
 }

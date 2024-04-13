@@ -20,6 +20,7 @@ export const doctorInfo=z.object({
     experience:z.string(),
     clinic:z.string(),
     fee:z.number(),
+    online_fee:z.number(),
     clinic_days:z.array(z.string())
 
 })

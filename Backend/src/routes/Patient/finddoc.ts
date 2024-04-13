@@ -76,6 +76,7 @@ findDocRouter.get('/all',async (req:Request, res:Response)=>{
                 clinic:true,
                 rating:true,
                 fee:true,
+                online_fee:true,
                 clinic_days:true
             }
         });
@@ -92,6 +93,7 @@ findDocRouter.get('/all',async (req:Request, res:Response)=>{
                 clinic:true,
                 rating:true,
                 fee:true,
+                online_fee:true,
                 clinic_days:true
             }
         });
@@ -138,6 +140,7 @@ findDocRouter.get('/:type',async (req:Request, res:Response)=>{
             clinic:true,
             rating:true,
             fee:true,
+            online_fee:true,
             clinic_days:true,
         }
     });

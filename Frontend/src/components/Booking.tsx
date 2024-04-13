@@ -8,6 +8,7 @@ interface booktype{
   specialization:string;
   rating:number;
   fee:number;
+  online_fee:number;
   clinic:string;
   id:string;
   clinic_days:string[];
@@ -55,6 +56,27 @@ export const  Booking:React.FC<booktype>=(props)=>{
 
   }
 
+  async function bookOnline(){
+    const app_date=convertToPostgreSQLDateTime(selectedDate as Date);
+    try{
+      const response=await axios.post(`${BACKEND_URL}/api/v1/patient/book/online/${props.id}`,{
+        appointment_date:app_date,
+        symptoms:symptoms
+      },{
+        headers:{
+          Authorization:`Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      const json=response.data;
+      if(json.message){
+        alert(json.message);
+      }
+      props.setTrigger(false);
+    }catch(e){
+      alert("Error while Booking!");
+    }
+  }
+
 
   return (props.trigger)?(
     <div className="w-screen h-screen  align-middle items-center ">
@@ -75,13 +97,8 @@ export const  Booking:React.FC<booktype>=(props)=>{
             <p className="absolute top-[132px] w-full font-sans font-bold text-white text-[15px] text-center tracking-[0] leading-[21.0px] whitespace-nowrap">
               Overall Rating : {props.rating.toFixed(1)} / 5.0
             </p>
-            <p className="absolute top-[466px] w-full font-sans font-bold text-white text-[18px] text-center tracking-[0] leading-[25.2px] whitespace-nowrap">
-              <span className="font-sans font-bold text-white text-[18px] tracking-[0] leading-[25.2px]">
-                Consultation Fee : {props.fee}.00 ₹
-              </span>
-              <span className="text-[15px] leading-[21.0px]">&nbsp;</span>
-            </p>
-            <div className="absolute top-[441px] w-full font-sans font-bold text-white text-[15px] text-center tracking-[0] leading-[21.0px] whitespace-nowrap">
+
+            <div className="absolute top-[441px] w-full font-sans font-bold text-white text-[18px] text-center tracking-[0] leading-[21.0px] whitespace-nowrap">
               {props.clinic}
             </div>
             <div className="absolute top-[76px] w-full font-sans font-bold text-white text-[18px] text-center tracking-[0] leading-[25.2px] whitespace-nowrap">
@@ -89,14 +106,31 @@ export const  Booking:React.FC<booktype>=(props)=>{
             </div>
           </div>
           <div className="absolute w-[491px] h-[510px] top-[62px] left-[328px] bg-[#c9d5fc] rounded-[10px] overflow-hidden">
-            <button className="flex w-[214px] h-[32px] items-center gap-[16px] px-[16px] py-[8px] absolute top-[461px] left-[138px] bg-indigo-400 rounded-[10px] border border-solid  hover:scale-105 border-[#e0e0e0]" onClick={bookAppointment}>
-              <div className="w-[198px] mt-[-4.00px] mb-[-2.00px] mr-[-16.00px] font-sans font-bold text-white text-center leading-[22.4px] overflow-hidden relative text-[16px]">
-                Request Appointment
-              </div>
-            </button>
-            <div className="absolute top-[17px] left-[159px] font-sans font-bold text-indigo-800 text-[20px] text-center tracking-[0] leading-[28.0px] whitespace-nowrap">
+          <button 
+            className={`flex w-[150px] h-[32px] items-center gap-[16px] px-[16px] py-[8px] absolute top-[461px] left-[75px] 
+            ${props.online_fee == null ? 'bg-gray-400 cursor-not-allowed' : 'bg-violet-700 hover:scale-105 border border-solid border-[#e0e0e0]'} 
+            rounded-[10px]`}
+            onClick={props.online_fee != null ? bookOnline : undefined}
+            disabled={props.online_fee == null}
+          >
+          <div className="w-[150px] mt-[-4.00px] mb-[-2.00px] font-sans font-bold text-white text-center leading-[22.4px] overflow-hidden relative text-[16px]">
+            Book Online
+          </div>
+        </button>
+        <button 
+          className={`flex w-[150px] h-[32px] items-center gap-[16px] px-[16px] py-[8px] absolute top-[461px] left-[275px] 
+          ${props.fee == null ? 'bg-gray-400 cursor-not-allowed' : 'bg-violet-700 hover:scale-105 border border-solid border-[#e0e0e0]'} 
+          rounded-[10px]`}
+          onClick={props.fee != null ? bookAppointment : undefined}
+          disabled={props.fee == null}
+        >
+          <div className="w-[150px] mt-[-4.00px] mb-[-2.00px] font-sans font-bold text-white text-center leading-[22.4px] overflow-hidden relative text-[16px]">
+            Book Offline
+          </div>
+        </button>
+            {/* <div className="absolute top-[17px] left-[159px] font-sans font-bold text-indigo-800 text-[20px] text-center tracking-[0] leading-[28.0px] whitespace-nowrap">
               Enter your details
-            </div>
+            </div> */}
             <div className="absolute w-[459px] h-[167px] top-[278px] left-[16px] bg-[#5a21b6] rounded-[10px]">
                 <textarea className="flex-1 w-[440px] h-[130px] top-[28px] left-[9px] font-sans font-medium rounded-[10px] text-[#5a21b6] leading-[24px] relative text-[16px] border-none text-wrap px-2 py-2" placeholder="Enter your symptoms here..." onChange={(e)=>setSymptoms(e.target.value)}>
                 </textarea>
@@ -113,14 +147,25 @@ export const  Booking:React.FC<booktype>=(props)=>{
                 &nbsp;&nbsp; Select Date
               </div>
             </div>
-            {/* <div className="h-[82px] top-[182px] left-[17px] absolute w-[459px] bg-[#5a21b6] rounded-[10px]">
-              <div className="h-[40px] top-[34px] left-[6px] w-[446px] absolute rounded-[8px] border border-solid border-[#e0e0e0] shadow-[0px_1px_2px_#0000000d] flex flex-col bg-white m-auto p-auto">
-              Time slots here  
-            </div>
-              <div className="absolute w-[530px] top-[5px] left-[5px] font-sans font-bold text-[#eeeeee] text-[16px] tracking-[0] leading-[24px]">
-                &nbsp;&nbsp;Choose Time Slot
+            <div className="h-[95px] top-[10px] left-[17px] absolute w-[459px] bg-[#5a21b6] rounded-[10px]">
+            <div className="h-[50px] top-[35px] left-[6px] w-[446px] absolute rounded-[8px] border border-solid border-[#e0e0e0] shadow-[0px_1px_2px_#0000000d] flex flex-col bg-white m-auto p-auto">
+              <div className="flex justify-between items-center px-4 text-violet-950">
+                <span className="font-sans font-semibold">Online Consultation Fee:</span>
+                <span className="font-sans font-bold">{props.online_fee == null || isNaN(props.online_fee) ? 'N/A' : `${props.online_fee}.00 ₹`} </span> {/* Replace XX with the online fee */}
               </div>
-    </div> */}
+              <div className="flex justify-between items-center px-4">
+                <span className="font-sans font-semibold">Offline Consultation Fee:</span>
+                <span className="font-sans font-bold">{props.fee == null || isNaN(props.fee) ? 'N/A' : `${props.fee}.00 ₹`} </span> {/* Replace XX with the offline fee */}
+              </div>
+            </div>
+            <div className="absolute w-[530px] top-[5px] left-[10px] font-sans font-bold text-[#eeeeee] text-[16px] tracking-[0] leading-[24px]">
+              <div className="flex justify-between items-center">
+                <span>Consultation Fee</span>
+                <span>X X</span>
+              </div>
+            </div>
+          </div>
+
           </div> 
           <div className="absolute top-[4px] left-[303px] font-bold text-violet-950 text-[35px] text-center tracking-[0] leading-[49.0px] whitespace-nowrap">
             Book Appointment

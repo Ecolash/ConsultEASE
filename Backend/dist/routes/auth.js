@@ -46,7 +46,7 @@ exports.authRouter.post('/signup', (req, res) => __awaiter(void 0, void 0, void 
             });
             const jwtsecret = process.env.JWT_PASSWORD || 'secret';
             const token = jsonwebtoken_1.default.sign({ id: patient.id }, jwtsecret);
-            return res.json({ token });
+            return res.json({ jwt: token });
         }
         else {
             const doctor = yield prisma.doctor.create({

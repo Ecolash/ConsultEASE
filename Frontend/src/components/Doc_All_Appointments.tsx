@@ -258,7 +258,7 @@ type addressType={
             <div className="flex items-center justify-between ">
               <div>
                 <Typography className="text-[20px] font-sans font-bold text-violet-900"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                  All Appointments
+                  All Offline Appointments
                 </Typography>
                 
               </div>

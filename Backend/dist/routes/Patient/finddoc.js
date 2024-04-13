@@ -89,6 +89,7 @@ exports.findDocRouter.get('/all', (req, res) => __awaiter(void 0, void 0, void 0
                 clinic: true,
                 rating: true,
                 fee: true,
+                online_fee: true,
                 clinic_days: true
             }
         });
@@ -105,6 +106,7 @@ exports.findDocRouter.get('/all', (req, res) => __awaiter(void 0, void 0, void 0
                 clinic: true,
                 rating: true,
                 fee: true,
+                online_fee: true,
                 clinic_days: true
             }
         });
@@ -149,6 +151,7 @@ exports.findDocRouter.get('/:type', (req, res) => __awaiter(void 0, void 0, void
             clinic: true,
             rating: true,
             fee: true,
+            online_fee: true,
             clinic_days: true,
         }
     });

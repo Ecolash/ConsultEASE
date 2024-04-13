@@ -34,8 +34,6 @@ bookRouter.post('/offline/:id',async (req:Request, res:Response) => {
     const patientId=res.get('patientId');
     const doctorId=req.params.id;
     const body=req.body;
-    const datetime=new Date();
-    console.log(datetime);
     if(!patientId || !doctorId){
         res.status(404);
         return res.json({
@@ -60,6 +58,34 @@ bookRouter.post('/offline/:id',async (req:Request, res:Response) => {
     }
 });
 
+bookRouter.post('/online/:id',async (req:Request, res:Response) =>{
+    const patientId = res.get('patientId');
+    const doctorId=req.params.id;
+    const body=req.body;
+    if(!patientId || !doctorId){
+        res.status(404);
+        return res.json({
+            message:"Can't fetch doctor details"
+        })
+    }
+    try{
+        await prisma.online_Appointment.create({
+            data:{
+                patientId:patientId,
+                doctorId:doctorId,
+                Symptoms:body.symptoms,
+                appointment_date:body.appointment_date
+            }
+        });
+        return res.json({message:"Appointment Booked. Waiting for confirmation..."});
+    }
+    catch(e){
+        console.log(e);
+        res.status(403);
+        return res.json({error:"Database Issue"});
+    }
+
+})
 bookRouter.get('/offline/appointments',async (req:Request, res:Response)=>{
     const patientId = res.get('patientId');
     try{
@@ -91,6 +117,38 @@ bookRouter.get('/offline/appointments',async (req:Request, res:Response)=>{
         return res.json({error:"Database Issue"});
     }
 });
+
+bookRouter.get('/online/appointments',async (req:Request, res:Response)=>{
+    const patientId=res.get('patientId');
+    try{
+        const appointments=await prisma.online_Appointment.findMany({
+            where:{patientId:patientId,
+                    confirmed:true}
+        });
+        const currentdate=new Date();
+        const appointmentstoUpdate=appointments.filter(appointment=>new Date(appointment.appointment_date)<currentdate);
+        await prisma.online_Appointment.updateMany({
+            where:{
+                id:{
+                    in:appointmentstoUpdate.map(appointment=>appointment.id)
+                }
+            },
+            data:{
+                completed:true
+            }
+        });
+        const updatedAppointments=await prisma.online_Appointment.findMany({
+            where:{
+                patientId:patientId
+            }
+        });
+        return res.json(updatedAppointments);
+    }catch(e){
+        console.log(e);
+        res.status(403);
+        return res.json({error:"Database Issue"});
+    }
+})
 
 bookRouter.post('/offline/appointments/:id',async(req:Request,res:Response)=>{
     const appointmentId=req.params.id;
@@ -163,6 +221,22 @@ bookRouter.delete('/offline/delete/:id',async (req,res)=>{
     const appointmentId=req.params.id;
     try{
         await prisma.offline_Appointment.delete({
+            where:{
+                id:appointmentId
+            }
+        });
+        return res.json({message:"Appointment Cancelled"});
+    }catch(e){
+        console.log(e);
+        res.status(403);
+        return res.json({error:"Database Issue"});
+    }
+})
+
+bookRouter.delete('/online/delete/:id',async(req,res)=>{
+    const appointmentId=req.params.id;
+    try{
+        await prisma.online_Appointment.delete({
             where:{
                 id:appointmentId
             }

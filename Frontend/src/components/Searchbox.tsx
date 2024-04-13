@@ -14,7 +14,37 @@ type docsplType={
     clinic:string,
     rating:number,
     fee:number,
+    online_fee:number,
     clinic_days:string[],
+}
+interface SpecializationMapping {
+    [abbreviation: string]: string;
+  }
+  
+  const specializationMapping: SpecializationMapping = {
+    NL: "Neurologist",
+    PL: "Pulmonologist",
+    CL: "Cardiologist",
+    DL: "Dermatologist",
+    SG: "Surgeon",
+    OL: "Oncologist",
+    GP: "General Physician",
+    ENT: "ENT Specialist",
+    GY: "Gynecologist",
+    NPL: "Nephrologist",
+    DE: "Dentist",
+    OP: "Ophthalmologist",
+    OR: "Orthopedist",
+    PSY: "Psychiatrist",
+    GEL: "Gastroenterologist",
+    DC: "Diabetes Consultant"
+  };
+  
+function convert(doctor: docsplType): void {
+    const fullSpecialization = specializationMapping[doctor.specialization];
+    if (fullSpecialization) {
+      doctor.specialization = fullSpecialization;
+    }
 }
 
 export const SearchBox=()=>{
@@ -29,6 +59,9 @@ export const SearchBox=()=>{
             setDoctors(res.data);
         })
     },[filter]);
+    doctors.forEach(doctor=>{
+        convert(doctor)
+    })
     async function fetchCity(doctor:docsplType):Promise<string>{
         try {
             const response = await axios.get(`https://api-bdc.net/data/reverse-geocode?latitude=${doctor.latitude}&longitude=${doctor.longitude}&localityLanguage=en&key=bdc_2ea2200a8bec4bf69c4d4534c535f042`);
@@ -40,6 +73,7 @@ export const SearchBox=()=>{
             return ""; // Or any default value indicating failure
         }
     }
+
     return (
         <div className='bg-violet-50 h-screen flex flex-col flex-grow items-center z-0'>
             <div className="flex flex-row items-center my-4">
@@ -67,6 +101,7 @@ export const SearchBox=()=>{
                                     yoe={doctor.experience}
                                     clinic={doctor.clinic}
                                     fee={doctor.fee}
+                                    online_fee={doctor.online_fee}
                                     clinic_days={doctor.clinic_days}
                                     rating={doctor.rating}
                                     city={fetchCity(doctor)}
