@@ -6,6 +6,8 @@ import { useState,useEffect } from 'react';
 import axios from 'axios';
 import { ChangeEvent } from 'react';
 import { BACKEND_URL } from '../config';
+import { ImagePopupButton } from './PopUp';
+import { SkeletonLoader } from './Skeleton1';
 
 
 type daysAvailable ={
@@ -33,8 +35,13 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
     fee:props.fee,
     online_fee:props.online_fee,
     clinic_days:props.clinic_days,
-    password:props.password
+    password:props.password,
+    profile_pic:props.profile_pic
   });
+  let profile_url=props.profile_pic;
+  if(props.profile_pic==null){
+    profile_url="/profile.png";
+  }
   const [days,setDays]=useState<daysAvailable>({
     monday:false,
     tuesday:false,
@@ -54,6 +61,7 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
   const [updatelocation,setUpdateLocation]=useState(false);
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   const [password,setPassword] = useState("");
+  const [loading,setLoading]=useState(false);
   const [confirmspassword, setConfirmspassword] = useState("");
   function handleDropdownSpecialization(event:ChangeEvent<HTMLSelectElement>){
     setDocUpdate(c=>({
@@ -145,6 +153,23 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
       resolve(arr); // Resolve the promise once clinic days are processed
     });
   }
+  async function handleImage(){
+    if(selectedFile==null)return;
+    try{
+      const formdata=new FormData();
+      formdata.append('upload',selectedFile);
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      };
+
+      const response=await axios.post(`${BACKEND_URL}/upload`,formdata,config);
+      profile_url=response.data.url;
+    }catch(e){
+      alert("Unable to upload image");
+    }
+  }
   async function handleRequest(){
     if(password!=confirmspassword){
       alert("Password did not match");
@@ -156,6 +181,9 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
     //     password:password
     //   }))
     // }
+    setLoading(true);
+    await handleImage();
+    setLoading(false);
     if(updatelocation){
       const [location,clinicdays]=await Promise.all([getLocation(),handleClinicdays()]);
       const{latitude,longitude}=location;
@@ -175,6 +203,7 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
           fee:docUpdate.fee,
           online_fee:docUpdate.online_fee,
           clinic_days:clinicdays,
+          profile_pic:profile_url=="/profile.png"?null:profile_url
         },{
           headers:{
             "Authorization":"Bearer "+localStorage.getItem("token")
@@ -205,6 +234,7 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
           fee:docUpdate.fee,
           online_fee:docUpdate.online_fee,
           clinic_days:clinicdays,
+          profile_pic:profile_url=="/profile.png"?null:profile_url
         },{
           headers:{
             "Authorization":"Bearer "+localStorage.getItem("token")
@@ -256,6 +286,9 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
     const {latitude,longitude} = props;
     fetchAddress({latitude,longitude});
   },[]);
+  if(loading){
+    return <SkeletonLoader />
+  }
   return (
     <div className="w-full h-screen ">
       <div className="w-full h-screen">
@@ -264,7 +297,7 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
           <img
               className="absolute w-[275px] h-[275px] top-[200px] left-[50px] object-cover rounded-full align-middle"
               alt="Profile"
-              src={selectedFile ? URL.createObjectURL(selectedFile) : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRripLcqGUKIBfgbtmux6U1UY9UkgezqzJzFw&usqp=CAU"}
+              src={selectedFile ? URL.createObjectURL(selectedFile) : profile_url}
             />
             <div className="mt-4">
               <div className="mt-1 flex items-center">
@@ -283,11 +316,17 @@ export const Doc_Update:React.FC<doctorFullInfotype>=(props)=>{
                 </label>
               </div>
             </div>
-            <button className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[550px] left-[117px] bg-red-500 flex items-center gap-[16px] rounded-[10px] border-none hover:scale-105 hover:bg-violet-500]">
+            <button className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[550px] left-[117px] bg-red-500 flex items-center gap-[16px] rounded-[10px] border-none hover:scale-105 hover:bg-violet-500]" onClick={()=>{
+              setSelectedFile(null);
+              profile_url="/profile.png";
+            }}>
               <div className="relative w-[380px] mt-[-3.00px] mb-[-1.00px] text-white text-[14px] text-center whitespace-nowrap font-sans font-bold">
                 Remove Photo
               </div>
             </button>
+            <div className="relative mt-[-3.00px] ml-[-12.00px] top-[600px] text-white text-[14px] text-center whitespace-nowrap font-sans font-bold">
+              <ImagePopupButton imageUrl={props.medical_certificate} msg="View Certificate"/>
+              </div>
             <div className="absolute top-[22px] w-full [font-family:'Inter-Bold',Helvetica] font-bold text-[#eeeeee] text-[20px] text-center tracking-[0] leading-[28.0px] whitespace-nowrap">
               Edit your Profile
             </div>

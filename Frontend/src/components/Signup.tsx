@@ -1,15 +1,16 @@
-import {Alert } from './Alert';
 import { useNavigate } from 'react-router-dom';
 import  {useState} from 'react'
 import * as Components from './Slider';
 import { Signuptype } from '../InputTypes/auth';
 import { BACKEND_URL } from '../config';
 import axios from 'axios'
+import { Eye,EyeOff } from 'lucide-react';
 
 export const Authentication=()=>{
   const navigate=useNavigate();
   //const [alert, setalert] = useState(null); // Alert is an object
   const [signIn, toggle] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [postInputs,setPostInputs]=useState<Signuptype>({
     email:"",
     password:"",
@@ -24,6 +25,9 @@ export const Authentication=()=>{
       ...c,
       type:newType
     }))
+  };
+  const handleTogglePassword = () => {
+    setShowPassword(prevState => !prevState);
   };
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
@@ -44,6 +48,10 @@ export const Authentication=()=>{
         if(json.message){
           alert(json.message);
         }else{
+          await axios.post(`${BACKEND_URL}/intromail`,{
+            email:postInputs.email,
+            name:postInputs.name,
+          });
           localStorage.setItem("token",json.jwt);
           if(postInputs.type=="Doctor"){
             navigate("/doc/info");
@@ -94,8 +102,8 @@ export const Authentication=()=>{
   return (
     <>
     {/* <Alert alt = {alert} /> */}
-    <div className="flex justify-center items-center h-screen w-screen bg-cover bg-center" style={{backgroundImage: `url('https://media.istockphoto.com/id/532963888/photo/medical-or-science-with-soft-light-background.webp?b=1&s=170667a&w=0&k=20&c=KVuJwHqf-BYyhYT4wGc0iISYAY1Cw6-KdcTc7GgGmDg=')`}}>
-    <div className ='flex flex-col items-center	'>
+    <div className="flex justify-center items-center h-screen w-screen bg-cover bg-center" style={{backgroundImage: `url('https://img.freepik.com/premium-photo/blue-sky-blur-gradient-background_585272-66.jpg')`}}>
+      <div className ='flex flex-col items-center	'>
       <Components.Container>
               <Components.SignUpContainer signinIn={signIn}>
                   <Components.Form onSubmit={handleSubmit}>
@@ -121,9 +129,12 @@ export const Authentication=()=>{
                       <Components.Input type='password' placeholder='Confirm Password' onChange={(e)=>{
                         setPasswordcheck(e.target.value)
                       }}/>
+                      <Components.Anchor>
+                        <div className='font-sans font-semibold text-[11.5px] text-slate-500 p-0 m-o'>Note: Password length should be min 8 characters</div>
+                      </Components.Anchor>
                       <Components.selector type={postInputs} onTypeChange={handleTypeChange}  />
                       <Components.Button onClick={handleSignup}>Sign Up</Components.Button>
-                      <Components.Google_Button/>
+                      
                   </Components.Form>
               </Components.SignUpContainer>
 
@@ -136,15 +147,21 @@ export const Authentication=()=>{
                             email:e.target.value
                         }))
                       }}/>
-                       <Components.Input type='password' placeholder='Password' onChange={(e)=>{
+                       <Components.Input type={showPassword ? 'text' : 'password'}  placeholder='Password' onChange={(e)=>{
                         setPostInputs(c=>({
                             ...c,
                             password:e.target.value
                         }))
                       }}/>
-                       <Components.Anchor href='#'>Forgot your password?</Components.Anchor>
+                      <button 
+                        type="button" 
+                        onClick={handleTogglePassword} 
+                        style={{ position: 'absolute', left: '305px', top: '53%', transform: 'translateY(-50%)' }}
+                      >
+                        {showPassword ? <Eye /> : <EyeOff />}
+                      </button>
+                       {/* <Components.Anchor href='#'>Forgot your password?</Components.Anchor> */}
                        <Components.Button onClick={handleSignin}>Sign In</Components.Button>
-                       <Components.Google_Button/>
                    </Components.Form>
               </Components.SignInContainer>
 

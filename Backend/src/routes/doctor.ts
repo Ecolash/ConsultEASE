@@ -25,12 +25,22 @@ docRouter.get('/get/:id',async(req:Request,res:Response)=>{
 docRouter.get('/feedback/:id',async(req:Request,res:Response)=>{
     const appointmentid=req.params.id;
     try{
-        const appointment=await prisma.offline_Appointment.findFirst({
+        const offline_appointment=await prisma.offline_Appointment.findFirst({
             where:{
                 id:appointmentid
             }
         });
-        return res.json(appointment);
+        
+        const online_appointment=await prisma.online_Appointment.findFirst({
+                where:{
+                    id:appointmentid
+                }
+        });
+        if(offline_appointment){
+            return res.json(offline_appointment);
+        }else{
+            return res.json(online_appointment);
+        }
     }catch(e){
         console.log(e);
         res.status(403);

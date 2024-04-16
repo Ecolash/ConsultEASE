@@ -1,4 +1,5 @@
 import {
+  CheckCircle2,
     ChevronsUpDownIcon,
     Clock10Icon,
   } from "lucide-react";
@@ -9,9 +10,11 @@ import {
     CardBody,
   } from "@material-tailwind/react";
 
-  import { useState,useEffect } from "react";
+  import { useState,useEffect} from "react";
   import axios from "axios";
   import { BACKEND_URL } from "../config";
+import { ImagePopupButton2 } from "./PopUp";
+import { SkeletonLoader2 } from "./Skeleton2";
   type onlineappointmentType={
     id:string,
     patientId:string,
@@ -29,7 +32,7 @@ import {
   }
 
    
-  const TABLE_HEAD = ["Patient Name", "Symptoms", "Time",  "Meeting Link","Date", "Confirmation"]
+  const TABLE_HEAD = ["Patient Name", "Prescription", "Time",  "Meeting Link","Date", "Status"]
    
   const TABLE_ROWS = [
     {
@@ -162,6 +165,10 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
     const [status,setStatus]=useState<{[key:string]:string}>({});
     const[time,setTime] = useState("");
     const [link,setLink]=useState("");
+    const [selectedFile, setSelectedFile] = useState<{[key:string]:File | null}>({});
+    const [locked, setLocked] = useState<{[key:string]:boolean}>({});
+    let prescription_url:string;
+      
 
     useEffect(()=>{
         axios.get(`${BACKEND_URL}/api/v1/doctor/dashboard/online/all`,{
@@ -169,7 +176,14 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
             'Authorization':`Bearer ${localStorage.getItem('token')}`
           }
         }).then((res)=>{
-          setAppointments(res.data);
+          const sortedAppointments = res.data.sort((a:onlineappointmentType, b:onlineappointmentType) => {
+            // Convert appointment_date strings to Date objects
+            const dateA = new Date(a.appointment_date).getTime();
+            const dateB = new Date(b.appointment_date).getTime();
+            // Compare appointment dates
+            return dateB - dateA;
+          });
+          setAppointments(sortedAppointments);
           setLoading(false);
         })
       },[]);
@@ -187,6 +201,11 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
   
       appointments.forEach((appointment) => {
         fetchPatientName(appointment.patientId);
+        if(appointment.prescription==null){
+          setLocked((prev) => ({...prev, [appointment.id]: false }));
+        }else{
+          setLocked((prev) => ({...prev, [appointment.id]: true }));
+        }
         if (appointment.completed) {
             setStatus(prev => ({ ...prev, [appointment.id]: 'Completed' }));
         } else if (appointment.confirmed) {
@@ -203,8 +222,49 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
       const date=appointment_date.split('T')[0];
       return date;
     }
+
+    async function handlePrescription(id:string){
+      if(selectedFile[id]==null)return;
+    try{
+      const formdata=new FormData();
+      formdata.append('upload',selectedFile[id] as File);
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      };
+      const response=await axios.post(`${BACKEND_URL}/upload`,formdata,config);
+      console.log(response.data);
+      prescription_url=response.data.url;
+    }catch(e){
+      alert("Unable to upload certificate");
+    }
+    }
+
+    async function uploadPrescription(id:string){
+      setLoading(true);
+      await handlePrescription(id);
+      setLoading(false);
+      try{
+        const response=await axios.post(`${BACKEND_URL}/api/v1/doctor/dashboard/${id}/online/prescription`,{
+          prescription:prescription_url
+        },{
+          headers:{
+            'Authorization':`Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        const json=response.data;
+        if(json.message){
+          alert(json.message);
+        }
+      }
+      catch(e){
+        alert("Unable to upload prescription");
+      }
+
+    }
     if(loading){
-      return <div>Loading...</div>
+      return <SkeletonLoader2 />
     }
 
 
@@ -220,9 +280,9 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
       </div>
     </div>
   </CardHeader>
-  <CardBody className="rounded-none shadow-none border-none px-0"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-    <div className="max-h-[584px] overflow-auto no-scrollbar">
-      <table className="mt-4 w-full min-w-max table-auto text-left">
+  <CardBody className="rounded-none shadow-none border-none px-0 py-0"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+    <div className="max-h-[584px] mb-0 pb-0 overflow-auto no-scrollbar">
+      <table className="mt-4 mb-0 w-full min-w-max table-auto text-left">
         <thead>
           <tr>
             {TABLE_HEAD.map((head, index) => (
@@ -245,6 +305,19 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
           {appointments.map(
             (appointment) => {
               const classes = "p-2 border-b border-violet-200 bg-violet-50";
+              //const [selectedfile,setSelectedfile]=useState<File|null>(null);
+              
+              const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+                const files = event.target.files;
+                if (files && files.length > 0) {
+                  setSelectedFile((prev) => ({ ...prev, [appointment.id]: files[0] }));
+                } 
+              };
+            
+              const handleLock = () => {
+                setLocked((prev) => ({...prev, [appointment.id]: true }));
+                uploadPrescription(appointment.id);
+              };
 
               return (
                 <tr key={appointment.id}>
@@ -263,11 +336,44 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
                     </div>
                   </td>
                   <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography className="font-sans font-medium text-violet-900 text-[13.5px] h-11 overflow-y-auto custom-scrollbar"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
-                        <p className="w-64 whitespace-normal">{appointment.Symptoms}</p>
-                      </Typography>
-                    </div>
+                  <div className="overflow-hidden overflow-y-hidden flex flex-row gap-[5px]">
+                    {status[appointment.id]==="Completed" &&
+                    (
+                      <>
+                          {!selectedFile[appointment.id] && (
+                            <div>
+                              {locked[appointment.id] && (
+                                <div className="flex flex-row"><ImagePopupButton2 imageUrl={appointment.prescription}/>
+                                <div className="font-sans font-bold pt-1.5 pl-2 text-violet-900 text-[14px]">Uploaded!</div></div>
+                              )}
+                            </div>
+                          )}
+                          {!locked[appointment.id] && (<input
+                            type="file"
+                            id="fileInput"
+                            accept="image/*"
+                            className="text-center whitespace-nowrap items-center px-3 rounded-lg w-[250px] overflow-x-hidden font-sans font-medium text-violet-900 bg-violet-200"
+                            onChange={handleFileChange}
+                            disabled={locked[appointment.id]}
+                          />)}
+                          {selectedFile[appointment.id] && (
+                            <div>
+                              {!locked[appointment.id] && (
+                                <button className="text-center whitespace-nowrap items-center text-green-900 bg-green-400 rounded-full hover:scale-105 hover:bg-green-600 mt-1" onClick={handleLock}>
+                                  <CheckCircle2/>
+                                </button>
+                              )}
+                              {locked[appointment.id] && (
+                                <div className="flex flex-row"><ImagePopupButton2 imageUrl={appointment.prescription}/>
+                                <div className="font-sans font-bold pt-1.5 pl-2 text-violet-900 text-[14px]">Uploaded!</div></div>
+                              )}
+                            </div>
+                          )}
+
+                      </>
+                    ) 
+                    }
+                  </div>
                   </td>
                   <td className={classes}>
                   <div className="flex items-center">
@@ -290,8 +396,8 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
                           setLink(e.target.value);
                           
                         }} ></input>
-                    <button className={`${appointment.meeting_link==null?"bg-gray-300":"bg-green-300 hover:bg-green-400 text-green-700"}  mx-[140px] text-sm font-semibold py-[2px] px-3 h-7 top-[-28px] rounded-full align-right text-center relative z-10`} onClick={() =>{ if(appointment.meeting_link!=null){ window.location.href = appointment.meeting_link; }}}>
-                      Join
+                    <button className={`${appointment.meeting_link==null || appointment.completed?"bg-gray-300":"bg-green-300 hover:bg-green-400 text-green-700"}  mx-[140px] text-sm font-semibold py-[2px] px-3 h-7 top-[-28px] rounded-full align-right text-center relative z-10`} onClick={() =>{ if(appointment.meeting_link!=null && !appointment.completed){ window.location.href = appointment.meeting_link; }}}>
+                      {status[appointment.id]==='Completed'?"Expired":"Join"}
                     </button>
                   </div>
                   </td>

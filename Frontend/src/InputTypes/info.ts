@@ -37,7 +37,8 @@ export const docUpdate=z.object({
     clinic:z.string(),
     fee:z.number(),
     online_fee:z.number(),
-    clinic_days:z.array(z.string())
+    clinic_days:z.array(z.string()),
+    profile_pic:z.string(),
 })
 export type doctorUpdateType=z.infer<typeof docUpdate>;
 
@@ -57,7 +58,9 @@ export const doctorFullInfo=z.object({
     name:z.string(),
     email:z.string().email(),
     rating:z.number(),
-    password:z.string().min(8)
+    password:z.string().min(8),
+    profile_pic:z.string(),
+    medical_certificate:z.string()
 })
 export type doctorFullInfotype=z.infer<typeof doctorFullInfo>;
 
@@ -69,7 +72,8 @@ export const patientFullInfo=z.object({
     longitude:z.number(),
     name:z.string(),
     email:z.string().email(),
-    password:z.string().min(8)
+    password:z.string().min(8),
+    profile_pic:z.string()
 })
 
 export type patientFullInfotype=z.infer<typeof patientFullInfo>;

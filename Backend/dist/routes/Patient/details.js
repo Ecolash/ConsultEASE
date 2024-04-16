@@ -16,6 +16,7 @@ exports.detailsRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const client_1 = require("@prisma/client");
+const info_1 = require("../../InputType/info");
 exports.detailsRouter = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
 exports.detailsRouter.use('/*', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -44,6 +45,10 @@ exports.detailsRouter.use('/*', (req, res, next) => __awaiter(void 0, void 0, vo
     }
 }));
 exports.detailsRouter.post('/add', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { success } = info_1.patInfo.safeParse(req.body);
+    if (!success) {
+        return res.json({ error: "Invalid Input" });
+    }
     const patientId = res.get('patientId');
     const body = req.body;
     try {
@@ -54,7 +59,8 @@ exports.detailsRouter.post('/add', (req, res) => __awaiter(void 0, void 0, void 
                 age: body.age,
                 gender: body.gender,
                 latitude: body.latitude,
-                longitude: body.longitude
+                longitude: body.longitude,
+                profile_pic: body.profile_pic
             }
         });
         return res.json({ message: "Successfully Added" });
@@ -92,7 +98,8 @@ exports.detailsRouter.put('/update', (req, res) => __awaiter(void 0, void 0, voi
                 mobile: body.mobile,
                 gender: body.gender,
                 latitude: body.latitude,
-                longitude: body.longitude
+                longitude: body.longitude,
+                profile_pic: body.profile_pic
             }
         });
         return res.json({ message: "Successfully Updated" });

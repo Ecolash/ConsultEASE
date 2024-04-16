@@ -1,6 +1,7 @@
 import express, {Express, IRouter, Request, Response,NextFunction} from 'express'
 import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
+import { doctorInfo } from '../../InputType/info';
 
 export const detailsRouter:IRouter = express.Router();
 const prisma = new PrismaClient();
@@ -32,6 +33,10 @@ detailsRouter.use('/*',async(req:Request,res:Response,next:NextFunction)=>{
 })
 
 detailsRouter.post('/add', async (req:Request, res:Response)=>{
+    const {success}=doctorInfo.safeParse(req.body);
+    if(!success){
+        return res.json({error:"Invalid Input"});
+    }
     const doctorId=res.get('doctorId');
     const body=req.body;
     try{
@@ -48,7 +53,9 @@ detailsRouter.post('/add', async (req:Request, res:Response)=>{
                 clinic:body.clinic,
                 fee:body.fee,
                 online_fee:body.online_fee,
-                clinic_days:body.clinic_days
+                clinic_days:body.clinic_days,
+                profile_pic:body.profile_pic,
+                medical_certificate:body.medical_certificate
             }
         })
         return res.json({message:"Successfully Added"});
@@ -91,7 +98,8 @@ detailsRouter.put('/update', async (req:Request, res:Response)=>{
                 clinic:body.clinic,
                 fee:body.fee,
                 online_fee:body.online_fee,
-                clinic_days:body.clinic_days
+                clinic_days:body.clinic_days,
+                profile_pic:body.profile_pic
             }
         })
         return res.json({message:"Successfully Updated"});

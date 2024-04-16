@@ -85,7 +85,7 @@ authRouter.post('/signin',async (req:Request,res:Response)=>{
                             type:"Doctor"});
         }
         else{
-            return res.json({message:"Invalid Credentials"});
+            return res.json({message:"Password or Email did not match"});
         }
     }
 

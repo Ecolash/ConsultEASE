@@ -217,7 +217,7 @@ const TABLE_HEAD = ["Doctor Name", "Specialization", "Status", "Date and Time","
           </div>
         </div>
       </CardHeader>
-      <CardBody className="rounded-none shadow-none border-none px-0"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+      <CardBody className="rounded-none shadow-none border-none px-0 pb-0"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
         <div className="max-h-[584px] overflow-auto no-scrollbar">
           <table className="mt-4 w-full min-w-max table-auto text-left">
             <thead>
@@ -314,11 +314,11 @@ const TABLE_HEAD = ["Doctor Name", "Specialization", "Status", "Date and Time","
                       {(status[appointment.id] === 'Completed' && feedback_button(appointment.appointment_date)) &&
                       <button  className="hover:scale-110 justify-center h-4 flex flex-row " onClick={()=>{
                         if(!appointment.feedback_given){
-                          navigate(`/pat/feedback/${appointment.id}`)
+                          navigate(`/pat/offline/feedback/${appointment.id}`)
                         }
                         }}>
                       <NewspaperIcon className="h-4 w-5 mx-3 align-middle"/>
-                      <div>{appointment.feedback_given==true?"Feedback Done!":"Give Feedvack"}</div>
+                      <div>{appointment.feedback_given==true?"Feedback Done!":"Give Feedback"}</div>
                     </button>}
                   </td>
                     </tr>

@@ -3,8 +3,10 @@ import { patInfotype } from "../InputTypes/info";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { SkeletonLoader } from "./Skeleton1";
 
 export const Pat_Info=({email,name}:{email:string,name:string})=>{
+  const [loading,setLoading]=useState(false);
   const navigate=useNavigate();
   const [patInfo,setPatInfo]=useState<patInfotype>({
     mobile:"",
@@ -13,6 +15,13 @@ export const Pat_Info=({email,name}:{email:string,name:string})=>{
     latitude:0,
     longitude:0,
   });
+  const [selectedFile, setSelectedFile] = useState<File|null>(null);
+  let fileurl:string;
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setSelectedFile(event.target.files[0]);
+    } 
+  };
   function handleDropdownGender(event:ChangeEvent<HTMLSelectElement>){
     setPatInfo(c=>({
     ...c,
@@ -39,7 +48,40 @@ export const Pat_Info=({email,name}:{email:string,name:string})=>{
     });
     
   }
+  async function handleImage(){
+    if(selectedFile==null)return;
+    try{
+      const formdata=new FormData();
+      formdata.append('upload',selectedFile);
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      };
+
+      const response=await axios.post(`${BACKEND_URL}/upload`,formdata,config);
+      fileurl=response.data.url;
+    }catch(e){
+      alert("Unable to upload image");
+    }
+  }
   async function handleRequest(){
+    setLoading(true);
+    await handleImage();
+    setLoading(false);
+    const nullEntries = Object.entries(patInfo).filter(([key, value]) => {
+      // Skip latitude and longitude properties
+      if (key === 'latitude' || key === 'longitude') {
+          return false;
+      }
+      // Check for null, empty string, or zero value
+      return value === null || value === "" || value === 0;
+    });
+    
+    if (nullEntries.length > 0) {
+        alert("Please fill in all the details");
+        return;
+    }
     try{
       const location=await getLocation();
       try{
@@ -50,16 +92,20 @@ export const Pat_Info=({email,name}:{email:string,name:string})=>{
           gender:patInfo.gender,
           latitude:location.latitude,
           longitude:location.longitude,
+          profile_pic:fileurl
         },{
           headers:{
             "Authorization":"Bearer "+localStorage.getItem("token")
           },
         });
         const json=response.data;
-        if(json.message){
-          alert(json.message);
+        if(json.error){
+          alert(json.error);
         }
-        navigate('/pat/dashboard');
+        else if(json.message){
+          alert(json.message);
+          navigate('/pat/dashboard');
+        }
       }
       catch(e){
         alert("Can't Update details");
@@ -69,22 +115,38 @@ export const Pat_Info=({email,name}:{email:string,name:string})=>{
     }
   }
 
+  if(loading){
+    return <SkeletonLoader />
+  }
+
 
   return (
     <div className="w-screen h-screen">
       <div className="flex-wrap w-screen h-[screen]">
         <div className="relative h-screen bg-white overflow-hidden">
-          <div className="absolute w-[363px] h-screen bg-indigo-800 overflow-hidden items-center">
+          <div className="absolute w-[363px] h-screen bg-violet-800 overflow-hidden items-center">
             <img
               className="absolute w-[275px] h-[275px] top-[220px] left-[50px] object-cover rounded-full align-middle"
               alt="Profile"
-              src="/profile.png"
+              src={selectedFile ? URL.createObjectURL(selectedFile) : "/profile.png"}
             />
-            <button className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[550px] left-[117px] bg-indigo-400 flex items-center gap-[16px] rounded-[10px] border-none hover:scale-105 hover:bg-indigo-500]">
-              <div className="relative w-fit mt-[-3.00px] mb-[-1.00px] text-white text-[14px] text-center whitespace-nowrap font-sans font-bold">
-                Upload Photo
+            <div className="mt-4">
+              <div className="mt-1 flex items-center">
+                <input
+                  type="file"
+                  className="sr-only"
+                  id="profile_photo"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+                <label
+                  htmlFor="profile_photo"
+                  className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[560px] left-[117px] font-sans font-bold inline-flex text-[15px] text-center whitespace-nowrap items-center text-violet-900 bg-violet-400 gap-[16px] rounded-[10px] hover:scale-105 hover:bg-violet-600"
+                >
+                  Select Photo
+                </label>
               </div>
-            </button>
+            </div>
             <div className="absolute top-[22px] left-[90px] [font-family:'Inter-Bold',Helvetica] font-bold text-[#eeeeee] text-[20px] text-center tracking-[0] leading-[28.0px] whitespace-nowrap">
               Welcome to OMCS
             </div>
@@ -95,9 +157,9 @@ export const Pat_Info=({email,name}:{email:string,name:string})=>{
               {name}
             </div>
           </div>
-          <div className="absolute w-[2000px] h-screen left-[363px] bg-indigo-100 ">
-            <button className="w-[172px] h-[40px] absolute top-[480px] left-[218px] bg-indigo-400 flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0] hover:scale-105" onClick={handleRequest}>
-              <div className="relative w-[141px]  mt-[1.00px] mr-[1px] text-white text-[16px] text-center leading-[22.4px] [-webkit-line-clamp:1] font-sans font-bold">
+          <div className="absolute w-[2000px] h-screen left-[363px] bg-violet-100 ">
+            <button className="w-[172px] h-[40px] absolute top-[480px] left-[218px] bg-violet-400 flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0] hover:scale-105" onClick={handleRequest}>
+              <div className="relative w-[141px]  mt-[1.00px] ml-4 text-white text-[16px] text-center [-webkit-line-clamp:1] font-sans font-bold">
                 Confirm &amp; Save
               </div>
             </button>
@@ -141,7 +203,7 @@ export const Pat_Info=({email,name}:{email:string,name:string})=>{
             </form>              
             </div>
             </div>
-            <div className="absolute top-[29px] left-[172px] [font-family:'Inter-Bold',Helvetica] font-bold text-indigo-800 text-[20px] text-center tracking-[0] leading-[28.0px] whitespace-nowrap">
+            <div className="absolute top-[29px] left-[172px] [font-family:'Inter-Bold',Helvetica] font-bold text-violet-800 text-[20px] text-center tracking-[0] leading-[28.0px] whitespace-nowrap">
               Enter your Personal Details
             </div>
           </div>

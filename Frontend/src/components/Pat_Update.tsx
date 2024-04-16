@@ -4,11 +4,13 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { ChangeEvent } from 'react';
 import { BACKEND_URL } from '../config';
+import { SkeletonLoader } from './Skeleton1';
 
 
 
 export const  Pat_Update:React.FC<patientFullInfotype>=(props)=>{
   const [showPasswordFields, setShowPasswordFields] = useState(false);
+  const [loading,setLoading]=useState(false);
   const [address,setAddress] = useState("Loading...");
   const [updatelocation,setUpdateLocation]=useState(false);
   const [password,setPassword] = useState("");
@@ -21,6 +23,16 @@ export const  Pat_Update:React.FC<patientFullInfotype>=(props)=>{
     longitude:props.longitude,
     password:props.password
   })
+  let profile_url=props.profile_pic;
+  if(props.profile_pic==null){
+    profile_url="/profile.png";
+  }
+  const [selectedFile, setSelectedFile] = useState<File|null>(null);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setSelectedFile(event.target.files[0]);
+    } 
+  };
   function handleDropdownGender(event:ChangeEvent<HTMLSelectElement>){
     setPatUpdate(c=>({
     ...c,
@@ -47,6 +59,24 @@ export const  Pat_Update:React.FC<patientFullInfotype>=(props)=>{
     });
     
   }
+
+  async function handleImage(){
+    if(selectedFile==null)return;
+    try{
+      const formdata=new FormData();
+      formdata.append('upload',selectedFile);
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      };
+
+      const response=await axios.post(`${BACKEND_URL}/upload`,formdata,config);
+      profile_url=response.data.url;
+    }catch(e){
+      alert("Unable to upload image");
+    }
+  }
   async function fetchAddress({latitude,longitude}:{latitude:number,longitude:number}){
     try{
       const response=await axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}%2C${longitude}&key=8efc2e425d0c40358eb66c6e347d4789`);
@@ -58,11 +88,13 @@ export const  Pat_Update:React.FC<patientFullInfotype>=(props)=>{
     }
   }
   async function handleRequest(){
-    console.log("Hii");
     if(password!=confirmspassword){
       alert("Password did not match");
       return;
     }
+    setLoading(true);
+    await handleImage();
+    setLoading(false);
     if(updatelocation){
       const location =await getLocation();
       const {latitude,longitude}=location;
@@ -76,6 +108,7 @@ export const  Pat_Update:React.FC<patientFullInfotype>=(props)=>{
           gender:patUpdate.gender,
           latitude:latitude,
           longitude:longitude,
+          profile_pic:profile_url=="/profile.png"?null:profile_url
         },{
           headers:{
             "Authorization":"Bearer "+localStorage.getItem("token")
@@ -97,6 +130,7 @@ export const  Pat_Update:React.FC<patientFullInfotype>=(props)=>{
           gender:patUpdate.gender,
           latitude:patUpdate.latitude,
           longitude:patUpdate.longitude,
+          profile_pic:profile_url=="/profile.png"?null:profile_url
         },{
           headers:{
             "Authorization":"Bearer "+localStorage.getItem("token")
@@ -119,6 +153,10 @@ export const  Pat_Update:React.FC<patientFullInfotype>=(props)=>{
     fetchAddress({latitude,longitude});
   },[]);
 
+  if(loading){
+    return <SkeletonLoader />
+  }
+
   return (
     <div className="w-full h-screen ">
       <div className="w-full h-screen">
@@ -127,14 +165,30 @@ export const  Pat_Update:React.FC<patientFullInfotype>=(props)=>{
             <img
               className="absolute w-[275px] h-[275px] top-[200px] left-[50px] object-cover rounded-full align-middle"
               alt="Profile"
-              src="/profile.png"
+              src={selectedFile ? URL.createObjectURL(selectedFile) : profile_url}
             />
-            <button className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[500px] left-[117px] bg-violet-500 flex items-center gap-[16px] rounded-[10px] border-none hover:scale-105 hover:bg-violet-500]">
-              <div className="relative w-[380px] mt-[-3.00px] mb-[-1.00px] text-white text-[14px] text-center whitespace-nowrap font-sans font-bold">
-                Change Photo
+            <div className="mt-4">
+              <div className="mt-1 flex items-center">
+                <input
+                  type="file"
+                  className="sr-only"
+                  id="profile_photo"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+                <label
+                  htmlFor="profile_photo"
+                  className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[500px] left-[117px] font-sans font-bold inline-flex text-[15px] text-center whitespace-nowrap items-center text-violet-900 bg-violet-400 gap-[16px] rounded-[10px] hover:scale-105 hover:bg-violet-600"
+                >
+                  Change Photo
+                </label>
               </div>
-            </button>
-            <button className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[550px] left-[117px] bg-red-500 flex items-center gap-[16px] rounded-[10px] border-none hover:scale-105 hover:bg-violet-500]">
+            </div>
+            
+            <button className="w-[129px] h-[32px] px-[16px] py-[8px] absolute top-[550px] left-[117px] bg-red-500 flex items-center gap-[16px] rounded-[10px] border-none hover:scale-105 hover:bg-violet-500]" onClick={()=>{
+              setSelectedFile(null);
+              profile_url="/profile.png";
+            }}>
               <div className="relative w-[380px] mt-[-3.00px] mb-[-1.00px] text-white text-[14px] text-center whitespace-nowrap font-sans font-bold">
                 Remove Photo
               </div>

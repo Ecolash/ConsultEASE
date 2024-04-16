@@ -213,7 +213,7 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
       </div>
     </div>
   </CardHeader>
-  <CardBody className="rounded-none shadow-none border-none px-0"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+  <CardBody className="rounded-none shadow-none border-none px-0 pb-0"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
     <div className="max-h-[584px] overflow-auto no-scrollbar">
       <table className="mt-4 w-full min-w-max table-auto text-left">
         <thead>

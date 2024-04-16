@@ -4,7 +4,7 @@ import { SidebarItem } from "../components/Sidebar";
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
-import { Clock4,  HomeIcon,  Info,  PhoneIncoming,  Settings,  UserCircle } from 'lucide-react';
+import { Clock4,  HomeIcon,    PhoneIncoming,    UserCircle } from 'lucide-react';
 
 type basicInfo={
     email:string,
@@ -42,9 +42,7 @@ export const PatOnlineApt=()=>{
                 <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/pat/profile"/>
                 <SidebarItem icon = {<PhoneIncoming size={20} />} text ='Online Appointments' active path="/pat/online_appointments"/> 
                 <SidebarItem icon = {<Clock4 size={20} />} text ='Offline Appointments'  path="/pat/appointments"/> 
-                <hr className='my-3'/>
-                <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="/#" />
-                <SidebarItem icon = {<Info size={20} />} text ='About' path="/#" />
+                
             </Sidebar>    
             <Pat_Online_appoinments />
         </div>

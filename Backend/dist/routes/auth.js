@@ -96,7 +96,7 @@ exports.authRouter.post('/signin', (req, res) => __awaiter(void 0, void 0, void 
                 type: "Doctor" });
         }
         else {
-            return res.json({ message: "Invalid Credentials" });
+            return res.json({ message: "Password or Email did not match" });
         }
     }
 }));

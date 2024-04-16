@@ -77,7 +77,8 @@ findDocRouter.get('/all',async (req:Request, res:Response)=>{
                 rating:true,
                 fee:true,
                 online_fee:true,
-                clinic_days:true
+                clinic_days:true,
+                profile_pic:true
             }
         });
     }
@@ -94,7 +95,8 @@ findDocRouter.get('/all',async (req:Request, res:Response)=>{
                 rating:true,
                 fee:true,
                 online_fee:true,
-                clinic_days:true
+                clinic_days:true,
+                profile_pic:true
             }
         });
     }
@@ -142,6 +144,7 @@ findDocRouter.get('/:type',async (req:Request, res:Response)=>{
             fee:true,
             online_fee:true,
             clinic_days:true,
+            profile_pic:true
         }
     });
     if(!patientLat || !patientLon) {

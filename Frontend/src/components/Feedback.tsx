@@ -29,7 +29,6 @@ export const FeedbackForm = ({appointmentid}:{appointmentid:string}) => {
 };
 const handledocRating=async()=>{
   try{
-    console.log("In second route");
     await axios.post(`${BACKEND_URL}/api/v1/patient/book/offline/appointments/${appointmentid}`,{
       rating:rating
     },{

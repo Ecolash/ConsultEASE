@@ -1,13 +1,11 @@
 import axios from "axios" 
-import React from "react"
 import { useState,useEffect } from "react"
 import { BACKEND_URL } from "../config"
 import { useParams } from "react-router-dom"
 import { Sidebar } from "../components/Sidebar"
 import { SidebarItem } from "../components/Sidebar"
 import { DocCard } from "../components/DocCard"
-import { Booking } from "../components/Booking"
-import { Clock4,  HomeIcon,  Info,  PhoneIncoming,  Settings,  UserCircle } from 'lucide-react';
+import { Clock4,  HomeIcon, PhoneIncoming, UserCircle } from 'lucide-react';
 
 type docsplType={
     id:string,
@@ -20,6 +18,7 @@ type docsplType={
     rating:number,
     fee:number,
     online_fee:number,
+    profile_pic:string,
     clinic_days:string[],
 }
 type basicInfo={
@@ -115,11 +114,8 @@ export const DocSpl=()=>{
             <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' path="/pat/profile"/>
             <SidebarItem icon = {<PhoneIncoming size={20} />} text ='Online Appointments' path="/pat/online_appointments" /> 
             <SidebarItem icon = {<Clock4 size={20} />} text ='Offline Appointments' path="/pat/appointments" /> 
-            <hr className='my-3'/>
-            <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="/#" />
-            <SidebarItem icon = {<Info size={20} />} text ='About' path="/#" />
         </Sidebar>
-        <div className='bg-indigo-50 h-screen items-center flex flex-col flex-grow'>
+        <div className="flex justify-center items-center h-screen w-full bg-cover bg-center" style={{backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.6)), url('https://images.saymedia-content.com/.image/t_share/MTkzNzg4MTIxMjM2NjQ1MzE1/aesthetic-website-backgrounds.gif')`}}>
             <div className='overflow-y-scroll h-screen w-[500px] rounded-2xl flex flex-col no-scrollbar items-center my-6 border-black bg-indigo-100'>
                         <div >
                             {doctors.map(doctor=>
@@ -134,6 +130,7 @@ export const DocSpl=()=>{
                                     online_fee={doctor.online_fee}
                                     clinic_days={doctor.clinic_days}
                                     rating={doctor.rating}
+                                    profile_pic={doctor.profile_pic}
                                     city={fetchCity(doctor)}
                                      />
                                     

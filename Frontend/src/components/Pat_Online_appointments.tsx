@@ -6,6 +6,8 @@ import {
     EyeIcon,
     LucideBookX,
     NewspaperIcon,
+    PencilLineIcon,
+    SquareCheckBig,
     
   } from "lucide-react";
 import {
@@ -21,6 +23,7 @@ import { doctorFullInfotype } from "../InputTypes/info";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { convert } from "./Pat_Appointments";
+import { ImagePopupButton2 } from "./PopUp";
 
 type onlineappointmentType={
   id:string,
@@ -250,6 +253,13 @@ type onlineappointmentType={
       // Return the formatted time
       return hours + ":" + minutes + " " + period;
     }
+    function feedback_button(appointment_date:string):boolean{
+      const date=new Date(appointment_date);
+      const thirtyDaysInMilliseconds = 30 * 24 * 60 * 60 * 1000;
+      const differenceInMilliseconds = currentdate.getTime() - date.getTime();
+      if(differenceInMilliseconds<=thirtyDaysInMilliseconds) return true;
+      else return false;
+    }
     async function handleDelete(appointmentid:string){
       try{
         const response=await axios.delete(`${BACKEND_URL}/api/v1/patient/book/online/delete/${appointmentid}`,{
@@ -287,7 +297,7 @@ type onlineappointmentType={
       </div>
     </div>
   </CardHeader>
-  <CardBody className="rounded-none shadow-none border-none px-0"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+  <CardBody className="rounded-none shadow-none border-none px-0 pb-0"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
     <div className="max-h-[584px] overflow-auto no-scrollbar">
       <table className="mt-4 w-full min-w-max table-auto text-left">
         <thead>
@@ -300,15 +310,12 @@ type onlineappointmentType={
                 <Typography
                   className="flex items-center justify-between gap-2 font-sans font-bold text-[14px] text-white leading-none"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                >
                   {head}{" "}
-                  {index !== TABLE_HEAD.length - 1 && (
-                    <ChevronsUpDownIcon strokeWidth={2} className="h-4 w-4" />
-                  )}
                 </Typography>
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="px-0">
           {appointments.map(
             (appointment) => {
               const classes = "p-2 border-b border-violet-200 bg-violet-50";
@@ -339,7 +346,7 @@ type onlineappointmentType={
                     </div>
                   </td>
                   <td className={classes}>
-                    <div className="w-max content-center min-w-[40px]">
+                    <div className="content-center min-w-[30px]">
                       <div
                         className={`${
                           status[appointment.id] === 'Confirmed' ? 'bg-green-200 text-green-900' :
@@ -360,47 +367,47 @@ type onlineappointmentType={
                     <p className="px-2 py-1 text-sm font-sans font-semibold text-violet-700 text-[13px]">{appointment.meeting_link.split('/').pop()}</p>
                   </div>}
                   {(status[appointment.id] === 'Completed') && <div className="w-[200px] h-7 flex flex-row flex-wrap bg-gray-100 rounded-full shadow-md">
-                    <button className="bg-gray-400 text-white font-bold py-0.5 px-4 h-7 rounded-full align-right text-center">
+                    <button className="bg-gray-400 text-white font-bold py-0.5 px-2 h-7 rounded-full align-right text-center">
                       Expired
                     </button>
-                    <p className="px-2 py-1 text-sm font-sans font-semibold text-gray-500 text-[13px]">{appointment.meeting_link}</p>
+                    <p className="px-2 py-1 text-sm font-sans font-semibold text-gray-500 text-[13px]">{appointment.meeting_link.split('/').pop()}</p>
                   </div>}
                   </td>
                   <td className={classes}>
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-sans font-semibold flex"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
+                      className="font-sans font-semibold flex text-[13px]"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}                    >
                       <Clock10Icon className="h-5 w-5 mr-1.5 mt-0.5" />
                       {status[appointment.id] === 'Confirmed' || status[appointment.id] === 'Completed' ? `${fetchdate(appointment.appointment_date)} | ${fetchtime(appointment.appointment_time)}` : `${fetchdate(appointment.appointment_date)} | --`}
                     </Typography>
                   </td>
                   <td className={classes + ' items-center content-center align-middle justify-center bg-violet-50'}>
-                  <button 
-                    className={`flex items-center justify-center ${
-                      appointment.prescription!=null
-                        ? 'bg-violet-900 p-2 hover:scale-105 font-sans ml-4 text-[13px] text-violet-50 rounded-full font-semibold' 
-                        : 'bg-gray-300 p-2 cursor-not-allowed font-sans ml-4 text-[13px] text-gray-500 rounded-full font-semibold'
-                      }`}
-                    disabled={appointment.prescription == null}
-                  >
-                    <EyeIcon />
-                    </button> 
+                    {(status[appointment.id]==='Completed' && appointment.prescription!=null)? <ImagePopupButton2 imageUrl={appointment.prescription}/>:<button className="text-gray-800 bg-gray-300 p-2 h-[32px] rounded-full" disabled><EyeIcon className="h-[16px] w-[16px]"/></button>}
+                    
                     </td>
                     <td className={classes + ' items-center content-center align-middle justify-center'}>
                     {(status[appointment.id] === 'Pending') &&
                       <button className="hover:scale-110 h-4 justify-center flex flex-row " onClick={()=>handleDelete(appointment.id)}>
-                      <BookX className="h-4 w-5 mx-3 align-middle"/>
-                      <div>Cancel Slot</div>
+                      <BookX className="h-5 w-5 mr-0.5 align-middle"/>
+                      <div>Cancel</div>
                       </button>}
-                      {(status[appointment.id] === 'Completed' ) &&
+                      {(status[appointment.id] === 'Completed' && feedback_button(appointment.appointment_date) ) &&
                       <button  className="hover:scale-110 justify-center h-4 flex flex-row " onClick={()=>{
                         if(!appointment.feedback_given){
-                          navigate(`/pat/feedback/${appointment.id}`)
+                          navigate(`/pat/online/feedback/${appointment.id}`)
                         }
                         }}>
-                      <NewspaperIcon className="h-4 w-5 mx-3 align-middle"/>
-                      <div>{appointment.feedback_given==true?"Feedback Done!":"Give Feedvack"}</div>
+                        <div className="flex flex-row">
+                          {appointment.feedback_given === false ? (
+                            <div className="bg-violet-700 text-white rounded-md flex items-center justify-center mt-0.5 mr-0.5 w-6 h-6">
+                              <PencilLineIcon className="h-4 w-4 align-middle" />
+                            </div>
+                          ) : (
+                            <SquareCheckBig className="h-5 w-5 mt-0.5 mr-0.5 align-middle" />
+                          )}
+                          <div>Feedback</div>
+                        </div>
                     </button>}
                   </td>
                 </tr>

@@ -12,7 +12,8 @@ interface DocCardProps{
   fee:number,
   online_fee:number,
   clinic_days:string[],
-  rating:number
+  rating:number,
+  profile_pic:string,
   city:Promise<string>
 }
 
@@ -58,9 +59,9 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
               </p>
             </div>
             <img
-              className="absolute rounded-2xl w-[126px] h-[129px] top-[5px] left-[8px] object-cover px-2 py-2"
+              className="absolute rounded-2xl w-[126px] h-[129px] top-[5px] left-[8px] border-4 border-violet-400 object-cover px-0.5 py-0.5"
               alt="Download"
-              src="https://static.vecteezy.com/system/resources/thumbnails/028/287/555/small/an-indian-young-female-doctor-isolated-on-green-ai-generated-photo.jpg"
+              src={props.profile_pic==null?"/profile.png":props.profile_pic}
             />
             <div className="absolute w-[77px] h-[25px] top-[11px] left-[396px]">
               <div className="relative w-[75px] h-[25px]">
@@ -88,6 +89,7 @@ export const DocCard:React.FC<DocCardProps>=(props)=>{
                                         online_fee={props.online_fee}
                                         clinic={props.clinic}
                                         id={props.id}
+                                        profile_pic={props.profile_pic}
                                         clinic_days={props.clinic_days} />
     </div>
   );

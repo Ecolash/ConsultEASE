@@ -1,9 +1,8 @@
-import { Doc_Update } from "../components/Doc_Update";
 import { Sidebar,SidebarItem } from "../components/Sidebar";
 import { useState,useEffect } from "react";
 import { BACKEND_URL } from "../config";
 import axios from "axios";
-import { Clock4,  HomeIcon,  Info, PhoneIncoming,  Settings,  UserCircle } from 'lucide-react';
+import { Clock4,  HomeIcon,   PhoneIncoming, UserCircle } from 'lucide-react';
 import { patientFullInfotype } from "../InputTypes/info";
 import { Pat_Update } from "../components/Pat_Update";
 
@@ -17,7 +16,8 @@ export const Pat_Profile=()=>{
         gender: "",
         latitude: 0,
         longitude: 0,
-        password:""
+        password:"",
+        profile_pic:""
     });
     useEffect(()=>{
         axios.get(`${BACKEND_URL}/api/v1/patient/details/get`,{
@@ -34,7 +34,8 @@ export const Pat_Profile=()=>{
             gender: res.data.gender,
             latitude: res.data.latitude,
             longitude: res.data.longitude,
-            password: res.data.password
+            password: res.data.password,
+            profile_pic:res.data.profile_pic
           }));
           setLoading(false);
         })
@@ -49,9 +50,7 @@ export const Pat_Profile=()=>{
             <SidebarItem icon = {<UserCircle size={20} />} text ='Profile' active path="/pat/profile"/>
             <SidebarItem icon = {<PhoneIncoming size={20} />} text ='Online Appointments' path="/pat/online_appointments"/> 
             <SidebarItem icon = {<Clock4 size={20} />} text ='Offline Appointments' path="/pat/appointments"/> 
-            <hr className='my-3'/>
-            <SidebarItem icon = {<Settings size={20} />} text ='Settings' path="/#"/>
-            <SidebarItem icon = {<Info size={20} />} text ='About' path="/#"/>
+            
         </Sidebar>
         <Pat_Update name={patDetails.name}
                     email={patDetails.email}
@@ -60,6 +59,7 @@ export const Pat_Profile=()=>{
                     gender={patDetails.gender}
                     latitude={patDetails.latitude}
                     longitude={patDetails.longitude}
-                    password={patDetails.password}/>
+                    password={patDetails.password}
+                    profile_pic={patDetails.profile_pic}/>
     </div>
 }

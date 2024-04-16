@@ -11,6 +11,7 @@ interface booktype{
   online_fee:number;
   clinic:string;
   id:string;
+  profile_pic:string;
   clinic_days:string[];
 }
 interface dateselector{
@@ -79,14 +80,14 @@ export const  Booking:React.FC<booktype>=(props)=>{
 
 
   return (props.trigger)?(
-    <div className="w-screen h-screen  align-middle items-center ">
-      <div className="fixed w-[833px] h-[584px] z-50 top-[120px] left-[390px]">
-        <div className="relative h-[584px] bg-violet-50 rounded-[15px] overflow-hidden">
+    <div className="w-screen h-screen align-middle items-center">
+      <div className="fixed w-[833px] h-[584px] top-[120px] z-50 left-[390px]  border-l-violet-900 border-spacing-1">
+        <div className="relative h-[584px] bg-violet-50 border-violet-500 border-4 pb-2 rounded-[15px] overflow-hidden">
           <div className="absolute w-[306px] h-[510px] top-[62px] left-[14px] bg-[#5a21b6] rounded-[10px] overflow-hidden">
             <img
               className="absolute w-[238px] h-[240px] top-[180px] left-[34px] object-cover rounded-full"
               alt="Profile"
-              src="/profile.png"
+              src={props.profile_pic==null?"/profile.png":props.profile_pic}
             />
             <div className="absolute top-[22px] w-full font-sans font-bold text-[#eeeeee] text-[20px] text-center tracking-[0] leading-[28.0px] whitespace-nowrap">
               Doctor Profile

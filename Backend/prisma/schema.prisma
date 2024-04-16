@@ -23,6 +23,7 @@ model Patient{
   gender String?
   latitude Float?
   longitude Float?
+  profile_pic String?
   appointments Offline_Appointment[]
   online_appointments Online_Appointment[]
 }
@@ -45,6 +46,8 @@ model Doctor{
   fee Int?
   online_fee Int?
   clinic_days String[]
+  profile_pic String?
+  medical_certificate String?
   appointments Offline_Appointment[]
   online_appointments Online_Appointment[]
 }
@@ -80,8 +83,8 @@ model Online_Appointment{
   feedback_given Boolean @default(false)
   punctuality String?
   clarity String?
-  comfort String?
-  communication String?
+  Comfort String?
+  Communication String?
   Comments String?
   rejected Boolean @default(false)
   completed Boolean @default(false)

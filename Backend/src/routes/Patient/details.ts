@@ -1,6 +1,7 @@
 import express, {Express, IRouter, Request, Response,NextFunction} from 'express'
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
+import { patInfo } from '../../InputType/info';
 
 
 export const detailsRouter:IRouter=express.Router();
@@ -30,6 +31,10 @@ detailsRouter.use('/*',async(req:Request,res:Response,next:NextFunction)=>{
     }
 })
 detailsRouter.post('/add', async (req:Request, res:Response)=>{
+    const {success}=patInfo.safeParse(req.body);
+    if(!success){
+        return res.json({error:"Invalid Input"});
+    }
     const patientId=res.get('patientId');
     const body=req.body;
     try{
@@ -40,7 +45,8 @@ detailsRouter.post('/add', async (req:Request, res:Response)=>{
                 age:body.age,
                 gender:body.gender,
                 latitude:body.latitude,
-                longitude:body.longitude
+                longitude:body.longitude,
+                profile_pic:body.profile_pic
             }
         })
         return res.json({message:"Successfully Added"});
@@ -79,7 +85,8 @@ detailsRouter.put('/update', async (req:Request, res:Response)=>{
                 mobile:body.mobile,
                 gender:body.gender,
                 latitude:body.latitude,
-                longitude:body.longitude
+                longitude:body.longitude,
+                profile_pic:body.profile_pic
             }
         })
         return res.json({message:"Successfully Updated"});

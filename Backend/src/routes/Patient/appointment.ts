@@ -188,7 +188,47 @@ bookRouter.post('/offline/appointments/:id',async(req:Request,res:Response)=>{
         return res.json({error:"Database Issue"});
     }
 
-})
+});
+
+bookRouter.post('/online/appointments/:id',async (req:Request,res:Response)=>{
+    const appointmentId=req.params.id;
+    const rating=req.body.rating;
+    try{
+        const appointment=await prisma.online_Appointment.update({
+            where:{
+                id:appointmentId,
+                completed:true
+            },
+            data:{
+                feedback:rating
+            }
+        });
+        const doctor=await prisma.doctor.findFirst({
+            where:{id:appointment.doctorId}
+        });
+        if(!doctor){
+            res.status(404);
+            return res.json({
+                message:"Can't fetch doctor details"
+            });
+        }
+        const numRatings=doctor.numRatings;
+        const prev=doctor.rating;
+        const now=(prev*numRatings+rating)/(numRatings+1);
+        await prisma.doctor.update({
+            where:{id:doctor.id},
+            data:{
+                rating:now,
+                numRatings:numRatings+1
+            }
+        });
+
+    }catch(e){
+        console.log(e);
+        res.status(403);
+        return res.json({error:"Database Issue"});
+    }
+});
 
 bookRouter.post('/offline/feedback/:id',async (req:Request,res:Response) => {
    
@@ -209,6 +249,31 @@ bookRouter.post('/offline/feedback/:id',async (req:Request,res:Response) => {
             }
         })
         
+        return res.json({message:"Thanks for the feedback"});
+    }catch(e){
+        console.log(e);
+        res.status(403);
+        return res.json({error:"Database Issue"});
+    }
+});
+
+bookRouter.post('/online/feedback/:id', async (req:Request,res:Response) => {
+    const appointmentId=req.params.id;
+    const body=req.body;
+    try{
+        await prisma.online_Appointment.update({
+            where:{
+                id:appointmentId
+            },
+            data:{
+                feedback_given:true,
+                punctuality:body.punctuality,
+                Comfort:body.comfort,
+                Communication:body.communication,
+                clarity:body.clarity,
+                Comments:body.comments
+            }
+        })
         return res.json({message:"Thanks for the feedback"});
     }catch(e){
         console.log(e);

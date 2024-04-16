@@ -23,7 +23,9 @@ export const Doc_Profile=()=>{
         online_fee:0,
         clinic_days: [],
         rating:0,
-        password:""
+        password:"",
+        profile_pic:"",
+        medical_certificate:""
     });
     useEffect(()=>{
         axios.get(`${BACKEND_URL}/api/v1/doctor/details/get`,{
@@ -46,7 +48,9 @@ export const Doc_Profile=()=>{
             fee: res.data.fee,
             online_fee:res.data.online_fee,
             clinic_days: res.data.clinic_days,
-            password: res.data.password
+            password: res.data.password,
+            profile_pic:res.data.profile_pic,
+            medical_certificate:res.data.medical_certificate
           }));
           setLoading(false);
         })
@@ -82,6 +86,8 @@ export const Doc_Profile=()=>{
                     clinic_days={docDetails.clinic_days}
                     rating={docDetails.rating}
                     password={docDetails.password}
+                    profile_pic={docDetails.profile_pic}
+                    medical_certificate={docDetails.medical_certificate}
                     />
     </div>
 }

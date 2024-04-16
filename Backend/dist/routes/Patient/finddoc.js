@@ -90,7 +90,8 @@ exports.findDocRouter.get('/all', (req, res) => __awaiter(void 0, void 0, void 0
                 rating: true,
                 fee: true,
                 online_fee: true,
-                clinic_days: true
+                clinic_days: true,
+                profile_pic: true
             }
         });
     }
@@ -107,7 +108,8 @@ exports.findDocRouter.get('/all', (req, res) => __awaiter(void 0, void 0, void 0
                 rating: true,
                 fee: true,
                 online_fee: true,
-                clinic_days: true
+                clinic_days: true,
+                profile_pic: true
             }
         });
     }
@@ -153,6 +155,7 @@ exports.findDocRouter.get('/:type', (req, res) => __awaiter(void 0, void 0, void
             fee: true,
             online_fee: true,
             clinic_days: true,
+            profile_pic: true
         }
     });
     if (!patientLat || !patientLon) {

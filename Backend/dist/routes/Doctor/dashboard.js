@@ -80,13 +80,20 @@ exports.dashRouter.get('/online', (req, res) => __awaiter(void 0, void 0, void 0
 exports.dashRouter.get('/feedback', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const doctorId = res.get('doctorId');
     try {
-        const appointments = yield prisma.offline_Appointment.findMany({
+        const offline_appointments = yield prisma.offline_Appointment.findMany({
             where: {
                 doctorId: doctorId,
                 feedback_given: true
             }
         });
-        return res.json(appointments);
+        const online_appointments = yield prisma.online_Appointment.findMany({
+            where: {
+                doctorId: doctorId,
+                feedback_given: true
+            }
+        });
+        return res.json({ offline: offline_appointments,
+            online: online_appointments });
     }
     catch (e) {
         console.log(e);
@@ -279,6 +286,25 @@ exports.dashRouter.post('/:id/completed', (req, res) => __awaiter(void 0, void 0
         else {
             return res.json({ message: "Appointment not yet completed" });
         }
+    }
+    catch (e) {
+        console.log(e);
+        res.status(403);
+        return res.json({ error: "Database Issue" });
+    }
+}));
+exports.dashRouter.post('/:id/online/prescription', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const appointmentId = req.params.id;
+    try {
+        yield prisma.online_Appointment.update({
+            where: {
+                id: appointmentId
+            },
+            data: {
+                prescription: req.body.prescription
+            }
+        });
+        return res.json({ message: "Prescription Uploaded" });
     }
     catch (e) {
         console.log(e);

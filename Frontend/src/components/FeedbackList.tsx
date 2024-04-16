@@ -28,6 +28,7 @@ import {
     comments:string,
     feedback_give:boolean,
     feedback:number
+    type:string
   }
 
    
@@ -163,7 +164,16 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
           'Authorization':`Bearer ${localStorage.getItem('token')}`
         }
       }).then((res)=>{
-        setAppointments(res.data);
+        const offlineAppointments = res.data.offline.map((appointment: feedbackType) => ({
+          ...appointment,
+          type: 'Offline'
+        }));
+        const onlineAppointments = res.data.online.map((appointment: feedbackType) => ({
+         ...appointment,
+          type: 'Online'
+        }));
+        const allAppointments=[...offlineAppointments,...onlineAppointments];
+        setAppointments(allAppointments);
         setLoading(false);
       })
     },[]);
@@ -216,7 +226,7 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
             </div>
           </div>
         </CardHeader>
-        <CardBody className="rounded-none shadow-none border-none px-0"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
+        <CardBody className="rounded-none shadow-none border-none px-0 pb-0"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>
           <div className="max-h-[584px] overflow-auto no-scrollbar">
             <table className="mt-4 w-full min-w-max table-auto text-left">
               <thead>
@@ -261,7 +271,7 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
                         </td>
                         <td className={classes}>
                         <div className="items-center font-sans font-bold text-violet-700 pl-4 text-[15px]">
-                          Offline
+                          {appointment.type}
                         </div>
                         </td>
                         <td className={classes}>                    

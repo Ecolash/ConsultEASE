@@ -44,7 +44,7 @@ type addressType={
   countryName:string;
 }
    
-  const TABLE_HEAD = ["Patient Name", "Symptoms", "Time", "Date & Day","Location", "Confirmation"];
+  const TABLE_HEAD = ["Patient Name", "Symptoms", "Time", "Date & Day","Location", "Status"];
    
   const TABLE_ROWS:TableRow[]= [
     {

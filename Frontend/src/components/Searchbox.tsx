@@ -15,6 +15,7 @@ type docsplType={
     rating:number,
     fee:number,
     online_fee:number,
+    profile_pic:string,
     clinic_days:string[],
 }
 interface SpecializationMapping {
@@ -104,6 +105,7 @@ export const SearchBox=()=>{
                                     online_fee={doctor.online_fee}
                                     clinic_days={doctor.clinic_days}
                                     rating={doctor.rating}
+                                    profile_pic={doctor.profile_pic}
                                     city={fetchCity(doctor)}
                                      />
                                     

@@ -13,9 +13,8 @@
  position: relative;
  overflow: hidden;
  width: 800px;
- margin-top: 8rem;
  max-width: 100%;
- min-height: 560px;
+ min-height: 600px;
  `;
 
  export const SignUpContainer = styled.div<SignUpContainerProps>`

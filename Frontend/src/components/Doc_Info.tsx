@@ -3,6 +3,7 @@ import { doctorInfotype } from "../InputTypes/info";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
+import { SkeletonLoader } from "./Skeleton1";
 type daysAvailable ={
   monday:boolean,
   tuesday:boolean,
@@ -40,11 +41,19 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
     sunday:false
   });
   const [selectedFile, setSelectedFile] = useState<File|null>(null);
+  const [certificate,setCertificate]=useState<File|null>(null);
+  const [loading,setLoading]=useState(false);
+  let fileurl:string,cfurl:string;
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setSelectedFile(event.target.files[0]);
     } 
   };
+  const handleCertificateChange= (event: React.ChangeEvent<HTMLInputElement>) => {
+    if(event.target.files){
+      setCertificate(event.target.files[0]);
+    }
+  }
   function getLocation(){
     return new Promise<{latitude:number,longitude:number}>((resolve, reject) => {
       if (navigator.geolocation) {
@@ -136,14 +145,67 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
       resolve(arr); // Resolve the promise once clinic days are processed
     });
   }
+
+  async function handleImage(){
+    if(selectedFile==null)return;
+    try{
+      const formdata=new FormData();
+      formdata.append('upload',selectedFile);
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      };
+
+      const response=await axios.post(`${BACKEND_URL}/upload`,formdata,config);
+      fileurl=response.data.url;
+    }catch(e){
+      alert("Unable to upload image");
+    }
+  }
+  async function handleCertificate(){
+    if(certificate==null)return;
+    try{
+      const formdata=new FormData();
+      formdata.append('upload',certificate);
+      const config = {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      };
+      const response=await axios.post(`${BACKEND_URL}/upload`,formdata,config);
+      console.log(response.data);
+      cfurl=response.data.url;
+    }catch(e){
+      alert("Unable to upload certificate");
+    }
+  }
   async function handleRequest(){
+    setLoading(true);
+    await handleImage()
+    await handleCertificate()
+    setLoading(false);
+    const nullEntries = Object.entries(docInfo).filter(([key, value]) => {
+      // Skip latitude and longitude properties
+      if (key === 'latitude' || key === 'longitude') {
+          return false;
+      }
+      // Check for null, empty string, or zero value
+      return value === null || value === "" || value === 0;
+  });
+  
+  if (nullEntries.length > 0) {
+      alert("Please fill in all the details");
+      return;
+  }
+  
     try {
+      console.log(fileurl,cfurl);
       // Wait for both location and clinic days to be processed
       const [location,clinicDays]=await Promise.all([getLocation(),handleClinicdays()]);
       
       // Now both location and clinic days are updated
       try{
-        console.log(localStorage.getItem('token'));
         const response=await axios.post(`${BACKEND_URL}/api/v1/doctor/details/add`,
         {
           mobile:docInfo.mobile,
@@ -156,17 +218,24 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
           clinic:docInfo.clinic,
           fee:docInfo.fee,
           online_fee:docInfo.online_fee,
-          clinic_days:clinicDays
+          clinic_days:clinicDays,
+          profile_pic:fileurl,
+          medical_certificate:cfurl
         },{
           headers:{
             "Authorization":"Bearer "+localStorage.getItem("token")
           },
         });
         const json=response.data;
-        if(json.message){
-          alert(json.message);
+        if(json.error){
+          alert(json.error);
+          navigate('/doc/info');
         }
-        navigate('/doc/dashboard');
+         else if(json.message){
+          alert(json.message);
+          navigate('/doc/dashboard');
+
+        }
       }catch(e){
         alert("Can't Update details");
       }
@@ -176,17 +245,18 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
     }
   }
 
-
+  if(loading){
+    return <SkeletonLoader />
+  }
   return (
     <div className="w-screen h-screen ">
       <div className="w-screen h-screen">
         <div className="relative h-screen overflow-hidden">
-          <div className="absolute w-screen h-full top-0 left-0 bg-indigo-800 items-center">
+          <div className="absolute w-screen h-full top-0 left-0 bg-violet-800 items-center">
           <img
               className="absolute w-[275px] h-[275px] top-[200px] left-[50px] object-cover rounded-full align-middle"
               alt="Profile"
-              src={selectedFile ? URL.createObjectURL(selectedFile) : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRripLcqGUKIBfgbtmux6U1UY9UkgezqzJzFw&usqp=CAU"}
-            />
+              src={selectedFile ? URL.createObjectURL(selectedFile) : "/profile.png"} />
             <div className="mt-4">
               <div className="mt-1 flex items-center">
                 <input
@@ -214,7 +284,7 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
               {name}
             </div>
           </div>
-          <div className="absolute w-[2200px] h-screen left-[363px] bg-indigo-100">
+          <div className="absolute w-[2200px] h-screen left-[363px] bg-violet-100">
             <input className="w-[293px] h-[30px] px-[16px] py-[8px] absolute top-[116px] left-[25px] bg-white flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0] font-sans font-semibold text-violet-500"  
             onChange={(e)=>{
               setDocInfo(c=>({
@@ -222,17 +292,30 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
                   mobile:e.target.value
               }))
             }} placeholder="Mobile Number" />
-            <button className="w-[351px] h-[32px] px-[16px] py-[8px] absolute top-[410px] left-[25px] bg-indigo-400 flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0] hover:scale-105">
-              <img
-                className="relative w-[20px] h-[20px] mt-[-2.50px] mb-[-2.50px] object-cover"
+            <div className="mt-4">
+              <div className="mt-1 flex items-center">
+                <input
+                  type="file"
+                  className="sr-only"
+                  id="certificate"
+                  accept="image/*"
+                  onChange={handleCertificateChange}
+                />
+                <label
+                  htmlFor="certificate"
+                  className="w-[370px] h-[32px] px-[16px] py-[8px] absolute top-[410px] left-[25px] font-sans font-bold inline-flex text-[15px] text-center whitespace-nowrap items-center text-violet-900 bg-violet-400 gap-[16px] rounded-[10px] hover:scale-105 hover:bg-violet-600"
+                >
+                  Upload your Medical Certificate to Verify
+                </label>
+                <img
+                className="w-[20px] h-[20px] mt-[-2.50px] mb-[-2.50px] absolute top-[418px] left-[355px] object-cover"
                 alt="Attach"
                 src="/attach.png"
               />
-              <p className="relative w-fit mt-[-3.00px] mb-[-1.00px] mr-[-5.00px] text-white text-[14px] leading-[19.6px] whitespace-nowrap [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
-                Upload your Medical Certificate to Verify
-              </p>
-            </button>
-            <button className="w-[172px] h-[32px] px-[16px] py-[8px] absolute top-[550px] left-[218px] bg-indigo-400 flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0] hover:scale-105" onClick={handleRequest}>
+              <div className="absolute top-[415px] left-[400px]"> {certificate?.name} </div>
+              </div>
+            </div>
+            <button className="w-[172px] h-[32px] px-[16px] py-[8px] absolute top-[550px] left-[218px] bg-violet-400 flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0] hover:scale-105" onClick={handleRequest}>
               <div className="relative w-[141px]  mt-[1.00px] mr-[1px] text-white text-[16px] text-center leading-[22.4px] [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
                 Confirm &amp; Save
               </div>
@@ -272,37 +355,37 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
               <div className="relative w-[83px] h-[21px] text-[#8f99f8] text-[14px] leading-[19.6px] whitespace-nowrap [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
                 Availability
               </div>
-              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.sunday? 'bg-green-400':'bg-indigo-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleSunday}>
+              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.sunday? 'bg-green-400':'bg-violet-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleSunday}>
                 <div className="relative w-[40px]  mt-[1.00px] mr-[1px] text-white text-[14px] leading-[19.6px] [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
                   SUN
                 </div>
               </button>
-              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.monday? 'bg-green-400':'bg-indigo-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleMonday} >
+              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.monday? 'bg-green-400':'bg-violet-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleMonday} >
                 <div className="relative w-[40px]  mt-[1.00px] mr-[1px] text-white text-[14px] leading-[19.6px] [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
                   MON
                 </div>
               </button>
-              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.tuesday? 'bg-green-400':'bg-indigo-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleTuesday}>
+              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.tuesday? 'bg-green-400':'bg-violet-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleTuesday}>
                 <div className="relative w-[40px]  mt-[1.00px] mr-[1px] text-white text-[14px] leading-[19.6px] [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
                   TUE
                 </div>
               </button>
-              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.wednesday? 'bg-green-400':'bg-indigo-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleWedesday}>
+              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.wednesday? 'bg-green-400':'bg-violet-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleWedesday}>
                 <div className="relative w-[40px]  mt-[1.00px] mr-[1px] text-white text-[14px] leading-[19.6px] [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
                   WED
                 </div>
               </button>
-              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.thursday? 'bg-green-400':'bg-indigo-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleThursday}>
+              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.thursday? 'bg-green-400':'bg-violet-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleThursday}>
                 <div className="relative w-[40px]  mt-[1.00px] mr-[1px] text-white text-[14px] leading-[19.6px] [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
                   THU
                 </div>
               </button>
-              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.friday? 'bg-green-400':'bg-indigo-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleFriday}>
+              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] ${days.friday? 'bg-green-400':'bg-violet-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleFriday}>
                 <div className="relative w-[40px] mt-[1.00px] mr-[1px] text-white text-[14px] leading-[19.6px] [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
                   FRI
                 </div>
               </button>
-              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] mr-[-10.00px] ${days.saturday? 'bg-green-400':'bg-indigo-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleSaturday}>
+              <button className={`w-[45px] h-[30px] px-[5px] py-[8px] relative hover:scale-110 mt-[-3.50px] mb-[-3.50px] mr-[-10.00px] ${days.saturday? 'bg-green-400':'bg-violet-400'} flex items-center gap-[16px] rounded-[10px] border border-solid border-[#e0e0e0]`} onClick={handleSaturday}>
                 <div className="relative w-[40px]  mt-[1.00px] mr-[1px] text-white text-[14px] leading-[19.6px] [-webkit-line-clamp:1] [font-family:'Inter-Bold',Helvetica] font-bold tracking-[0] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-box-orient:vertical]">
                   SAT
                 </div>
@@ -371,7 +454,7 @@ export  const Doc_Info=({email,name}:{email:string,name:string})=> {
             </form>              
             </div>
             </div>
-            <div className="absolute top-[29px] left-[172px] [font-family:'Inter-Bold',Helvetica] font-bold text-indigo-800 text-[20px] text-center tracking-[0] leading-[28.0px] whitespace-nowrap">
+            <div className="absolute top-[29px] left-[172px] [font-family:'Inter-Bold',Helvetica] font-bold text-violet-800 text-[20px] text-center tracking-[0] leading-[28.0px] whitespace-nowrap">
               Enter your Personal Details
             </div>
           </div>

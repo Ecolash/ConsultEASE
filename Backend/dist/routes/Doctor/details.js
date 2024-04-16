@@ -16,6 +16,7 @@ exports.detailsRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const client_1 = require("@prisma/client");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const info_1 = require("../../InputType/info");
 exports.detailsRouter = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
 exports.detailsRouter.use('/*', (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -45,6 +46,10 @@ exports.detailsRouter.use('/*', (req, res, next) => __awaiter(void 0, void 0, vo
     }
 }));
 exports.detailsRouter.post('/add', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { success } = info_1.doctorInfo.safeParse(req.body);
+    if (!success) {
+        return res.json({ error: "Invalid Input" });
+    }
     const doctorId = res.get('doctorId');
     const body = req.body;
     try {
@@ -61,7 +66,9 @@ exports.detailsRouter.post('/add', (req, res) => __awaiter(void 0, void 0, void 
                 clinic: body.clinic,
                 fee: body.fee,
                 online_fee: body.online_fee,
-                clinic_days: body.clinic_days
+                clinic_days: body.clinic_days,
+                profile_pic: body.profile_pic,
+                medical_certificate: body.medical_certificate
             }
         });
         return res.json({ message: "Successfully Added" });
@@ -104,7 +111,8 @@ exports.detailsRouter.put('/update', (req, res) => __awaiter(void 0, void 0, voi
                 clinic: body.clinic,
                 fee: body.fee,
                 online_fee: body.online_fee,
-                clinic_days: body.clinic_days
+                clinic_days: body.clinic_days,
+                profile_pic: body.profile_pic
             }
         });
         return res.json({ message: "Successfully Updated" });

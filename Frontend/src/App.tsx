@@ -17,6 +17,7 @@ import { DocPendingOffline } from './pages/DocPendingOffline'
 import { DocPendingOnline } from './pages/DocPendingOnline'
 import { GetStarted } from './components/GetStarted'
 import { DocOnlineAppointments } from './pages/DocOnlineAppointments'
+import { Give_Feedback_Online } from './pages/GiveOnlineFeedback'
 function App() {
 
   return (
@@ -34,7 +35,8 @@ function App() {
         <Route path='/doc/profile' element={<Doc_Profile />} />
         <Route path='/doc/offline/appointments' element={<DocAppointments />} />
         <Route path='/doc/online/appointments' element={<DocOnlineAppointments />} />
-        <Route path='/pat/feedback/:id' element={<Give_Feedback />} />
+        <Route path='/pat/offline/feedback/:id' element={<Give_Feedback />} />
+        <Route path='/pat/online/feedback/:id' element={<Give_Feedback_Online />} />
         <Route path='/pat/profile' element={<Pat_Profile />} />
         <Route path='/doc/feedbacks' element={<Doc_Feedbacks />} />
         <Route path='/doc/feedbacks/:id' element={<Doc_FeedbackForm />} />
