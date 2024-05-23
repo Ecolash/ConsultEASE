@@ -16,6 +16,7 @@ import {
   import { BACKEND_URL } from "../config";
   import axios from "axios";
   import { useNavigate } from "react-router-dom";
+import { SkeletonLoader2 } from "./Skeleton2";
   type feedbackType={
     id: string,
     patientId:string,
@@ -34,130 +35,13 @@ import {
    
   const TABLE_HEAD = ["Patient Name", "Rating Given", "Meeting Type","Date and Time", "Feedback"]
    
-  const TABLE_ROWS = [
-    {
-      name: "John Michael",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'Online',
-      status: 'Confirmed',
-      date: "23/04/18",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Alexa Liras",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'Online',
-      status: 'Rejected',
-      date: "23/04/18",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Laurent Perrier",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'Online',
-      status: 'Pending',
-      date: "19/09/17",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Michael Levi",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'Online',
-      status: 'Completed',
-      date: "24/12/08",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Richard Gran",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'Online',
-      status: 'Completed',
-      date: "04/10/21",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-        name: "Richard Gran",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-      rating : "4.2",
-      link: 'Online',
-      status: 'Rejected',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-    },
-    {
-        name: "Michael Levi",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-      link: 'Online',
-        status: 'Completed',
-        date: "24/12/08",
-        time: "7:30 PM",
-        statusP: "Not yet Uploaded"
-      },
-      {
-        name: "Richard Gran",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-        link: 'Online',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-          name: "Richard Gran",
-    symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",          years : "5",
-          rating : "4.2",
-        link: 'Online',
-          date: "04/10/21",
-          time: "7:30 PM",
-          statusP: "View Prescription",
-      },
-      {
-        name: "Michael Levi",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-        link: 'Online',
-        date: "24/12/08",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-        name: "Richard Gran",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-        link: 'Online',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-          name: "Richard Gran",
-    symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",          years : "5",
-        rating : "4.2",
-        link: 'Online',
-          date: "04/10/21",
-          time: "7:30 PM",
-          statusP: "Not yet Uploaded"
-      },
-  ];
+ 
    
   export const FeedbackList=()=>{
     const navigate=useNavigate();
-    const [laoding,setLoading]=useState(true);
+    const [loading,setLoading]=useState(true);
     const [appointments,setAppointments]=useState<feedbackType[]>([]);
     const [patNames, setPatNames] = useState<{ [key: string]: string }>({});
-    const[time,setTime] = useState("");
     useEffect(()=>{
       axios.get(`${BACKEND_URL}/api/v1/doctor/dashboard/feedback`,{
         headers:{
@@ -211,6 +95,10 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
   
       return time12;
   }
+  if(loading){
+    return <SkeletonLoader2 />
+  }
+  
 
     return (
       (<Card className="h-full w-full mx-2"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>

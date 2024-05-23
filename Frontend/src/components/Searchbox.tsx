@@ -74,6 +74,7 @@ export const SearchBox=()=>{
             return ""; // Or any default value indicating failure
         }
     }
+    
 
     return (
         <div className='bg-violet-50 h-screen flex flex-col flex-grow items-center z-0'>

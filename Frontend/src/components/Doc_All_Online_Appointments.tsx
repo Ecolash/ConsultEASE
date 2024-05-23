@@ -34,128 +34,7 @@ import { SkeletonLoader2 } from "./Skeleton2";
    
   const TABLE_HEAD = ["Patient Name", "Prescription", "Time",  "Meeting Link","Date", "Status"]
    
-  const TABLE_ROWS = [
-    {
-      name: "John Michael",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Confirmed',
-      date: "23/04/18",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Alexa Liras",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Rejected',
-      date: "23/04/18",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Laurent Perrier",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Pending',
-      date: "19/09/17",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Michael Levi",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Completed',
-      date: "24/12/08",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Richard Gran",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Completed',
-      date: "04/10/21",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-        name: "Richard Gran",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Rejected',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-    },
-    {
-        name: "Michael Levi",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-        status: 'Completed',
-        date: "24/12/08",
-        time: "7:30 PM",
-        statusP: "Not yet Uploaded"
-      },
-      {
-        name: "Richard Gran",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-        link: 'https://meet.google.com/koy-fcfu-scs',
-        status: 'Completed',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-          name: "Richard Gran",
-    symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",          years : "5",
-          rating : "4.2",
-          link: 'https://meet.google.com/koy-fcfu-scs',
-          status: 'Rejected',
-          date: "04/10/21",
-          time: "7:30 PM",
-          statusP: "View Prescription",
-      },
-      {
-        name: "Michael Levi",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-        link: 'https://meet.google.com/koy-fcfu-scs',
-        status: 'Completed',
-        date: "24/12/08",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-        name: "Richard Gran",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-        link: 'https://meet.google.com/koy-fcfu-scs',
-        status: 'Completed',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-          name: "Richard Gran",
-    symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",          years : "5",
-        rating : "4.2",
-          link: 'https://meet.google.com/koy-fcfu-scs',
-          status: 'Rejected',
-          date: "04/10/21",
-          time: "7:30 PM",
-          statusP: "Not yet Uploaded"
-      },
-  ];
+
    
   export const  Doc_All_Online_appointments=()=>{
     const [loading,setLoading]=useState(true);
@@ -163,8 +42,6 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
     //const [docInfo,setDocInfo]=useState<doctorInfotype>();
     const [patNames, setPatNames] = useState<{ [key: string]: string }>({});
     const [status,setStatus]=useState<{[key:string]:string}>({});
-    const[time,setTime] = useState("");
-    const [link,setLink]=useState("");
     const [selectedFile, setSelectedFile] = useState<{[key:string]:File | null}>({});
     const [locked, setLocked] = useState<{[key:string]:boolean}>({});
     let prescription_url:string;
@@ -382,20 +259,14 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
                         id="time"
                         name="time"
                         value={appointment.appointment_time as string}
-                        onChange={(e)=>{
-                          setTime(e.target.value);
-                          
-                        }}
+                        
                         className="py-2 px-3 border rounded-md focus:outline-none focus:ring focus:border-blue-300"
                     />
                     </div>
                   </td>
                   <td className={classes}>
                   <div className="w-[195px] h-7 flex flex-row flex-wrap bg-violet-100 rounded-full shadow-md">
-                    <input className="px-2 py-1 w-[160px] text-sm font-sans font-semibold text-violet-700 text-[12.5px] h-7 border-none rounded-full" placeholder={appointment.meeting_link==null? "G-Meet Code here":appointment.meeting_link} onChange={(e)=>{
-                          setLink(e.target.value);
-                          
-                        }} ></input>
+                    <input className="px-2 py-1 w-[160px] text-sm font-sans font-semibold text-violet-700 text-[12.5px] h-7 border-none rounded-full" placeholder={appointment.meeting_link==null? "G-Meet Code here":appointment.meeting_link}  ></input>
                     <button className={`${appointment.meeting_link==null || appointment.completed?"bg-gray-300":"bg-green-300 hover:bg-green-400 text-green-700"}  mx-[140px] text-sm font-semibold py-[2px] px-3 h-7 top-[-28px] rounded-full align-right text-center relative z-10`} onClick={() =>{ if(appointment.meeting_link!=null && !appointment.completed){ window.location.href = appointment.meeting_link; }}}>
                       {status[appointment.id]==='Completed'?"Expired":"Join"}
                     </button>

@@ -13,6 +13,7 @@ import {
   import { useState,useEffect } from "react";
   import axios from "axios";
   import { BACKEND_URL } from "../config";
+import { SkeletonLoader2 } from "./Skeleton2";
   type onlineappointmentType={
     id:string,
     patientId:string,
@@ -32,128 +33,7 @@ import {
    
   const TABLE_HEAD = ["Patient Name", "Symptoms", "Time",  "Meeting Link","Date", "Confirmation"]
    
-  const TABLE_ROWS = [
-    {
-      name: "John Michael",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Confirmed',
-      date: "23/04/18",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Alexa Liras",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Rejected',
-      date: "23/04/18",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Laurent Perrier",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Pending',
-      date: "19/09/17",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Michael Levi",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Completed',
-      date: "24/12/08",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Richard Gran",
-symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",      years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Completed',
-      date: "04/10/21",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-        name: "Richard Gran",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-      rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-      status: 'Rejected',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-    },
-    {
-        name: "Michael Levi",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-      link: 'https://meet.google.com/koy-fcfu-scs',
-        status: 'Completed',
-        date: "24/12/08",
-        time: "7:30 PM",
-        statusP: "Not yet Uploaded"
-      },
-      {
-        name: "Richard Gran",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-        link: 'https://meet.google.com/koy-fcfu-scs',
-        status: 'Completed',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-          name: "Richard Gran",
-    symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",          years : "5",
-          rating : "4.2",
-          link: 'https://meet.google.com/koy-fcfu-scs',
-          status: 'Rejected',
-          date: "04/10/21",
-          time: "7:30 PM",
-          statusP: "View Prescription",
-      },
-      {
-        name: "Michael Levi",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-        link: 'https://meet.google.com/koy-fcfu-scs',
-        status: 'Completed',
-        date: "24/12/08",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-        name: "Richard Gran",
-  symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",        years : "5",
-        rating : "4.2",
-        link: 'https://meet.google.com/koy-fcfu-scs',
-        status: 'Completed',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-          name: "Richard Gran",
-    symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",          years : "5",
-        rating : "4.2",
-          link: 'https://meet.google.com/koy-fcfu-scs',
-          status: 'Rejected',
-          date: "04/10/21",
-          time: "7:30 PM",
-          statusP: "Not yet Uploaded"
-      },
-  ];
+ 
    
   export const  Doc_Online_appointments=()=>{
     const [loading,setLoading]=useState(true);
@@ -195,7 +75,7 @@ symptoms: "High fever, headache, rash and muscle and joint pain. Also a little n
       return date;
     }
     if(loading){
-      return <div>Loading...</div>
+      return <SkeletonLoader2 />
     }
 
 

@@ -1,5 +1,4 @@
  import styled from 'styled-components';
- import { useState } from 'react';
  import { Signuptype } from '../InputTypes/auth';
 
 //  import { Select, Option } from "@material-tailwind/react";

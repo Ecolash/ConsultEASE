@@ -1,6 +1,5 @@
 import React from "react";
 import { useState,useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Booking } from "./Booking";
 
 interface DocCardProps{
@@ -18,7 +17,6 @@ interface DocCardProps{
 }
 
 export const DocCard:React.FC<DocCardProps>=(props)=>{
-  const navigate = useNavigate();
   const daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
   const [resolvedCity, setResolvedCity] = useState("");
   const [popup,setPopup]=useState(false);

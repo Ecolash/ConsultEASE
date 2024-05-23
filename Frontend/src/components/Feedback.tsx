@@ -23,6 +23,7 @@ export const FeedbackForm = ({appointmentid}:{appointmentid:string}) => {
   });
   const [rating,setRating]=useState(0);
   const handleRatingChange = (event: React.ChangeEvent<{}>, newValue: number | null) => {
+    if(event){}
     if (newValue !== null) {
       setRating(newValue);
   }

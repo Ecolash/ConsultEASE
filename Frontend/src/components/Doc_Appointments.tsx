@@ -13,17 +13,8 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { doctorInfotype } from "../InputTypes/info";
+import { SkeletonLoader2 } from "./Skeleton2";
 
-interface TableRow {
-  name: string;
-  symptoms: string;
-  status: string;
-  date: string;
-  day: string;
-  time: string | null;
-  clinicName: string;
-  address: string;
-}
 
 type appointmentType={
   id:string,
@@ -47,119 +38,7 @@ type addressType={
    
   const TABLE_HEAD = ["Patient Name", "Symptoms", "Time", "Date & Day","Location", "Confirmation"];
    
-  const TABLE_ROWS:TableRow[]= [
-    {
-      name: "John Michael",
-      symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums ",
-      status: 'Confirmed',
-      date: "23/04/18",
-      day : "Monday",
-      time: null,
-      clinicName: "XYZ Clinic",
-      address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-      name: "Alexa Liras",
-      symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",
-      status: 'Rejected',
-      date: "23/04/18",
-      day : "Monday",
-      time: null,
-      clinicName: "XYZ Clinic",
-      address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-      name: "Laurent Perrier",
-      symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",
-      status: 'Pending',
-      date: "19/09/17",
-      day : "Monday",
-      time: null,
-      clinicName: "XYZ Clinic",
-      address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-      name: "Michael Levi",
-      symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",
-      status: 'Completed',
-      date: "24/12/08",
-      day : "Monday",
-      time: null,
-      clinicName: "XYZ Clinic",
-      address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-      name: "Richard Gran",
-      symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",
-      status: 'Completed',
-      date: "04/10/21",
-      day : "Monday",
-      time: null,
-      clinicName: "XYZ Clinic",
-      address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-        name: "Richard Gran",
-        symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",
-        status: 'Rejected',
-        date: "04/10/21",
-        day : "Monday",
-        time: null,
-        clinicName: "XYZ Clinic",
-        address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-    },
-    {
-        name: "Michael Levi",
-        symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",
-          status: 'Completed',
-        date: "24/12/08",
-        day : "Monday"
- ,       time: null,
-        clinicName: "XYZ Clinic",
-        address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-      {
-        name: "Richard Gran",
-        symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",
-          status: 'Completed',
-        date: "04/10/21",
-        day : "Monday"
- ,       time: null,
-        clinicName: "XYZ Clinic",
-        address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-      {
-          name: "Richard Gran",
-          symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",
-              status: 'Rejected',
-          date: "04/10/21",
-          day : "Monday"
-   ,       time: null,
-          clinicName: "XYZ Clinic",
-          address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-      {
-        name: "Michael Levi",
-        symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",
-          status: 'Completed',
-        date: "24/12/08",
-        day : "Monday"
- ,       time: null,
-        clinicName: "XYZ Clinic",
-        address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-      {
-        name: "Richard Gran",
-        symptoms: "High fever, headache, rash and muscle and joint pain. Also a little nausea and vomiting. Belly pain, tenderness, Vomiting (at least 3 times in 24 hours), Bleeding from the nose or gums",
-          status: 'Completed',
-        date: "04/10/21",
-        day : "Monday"
- ,       time: null,
-        clinicName: "XYZ Clinic",
-        address: "CESC, Garden Reach, Kolkata, West Bengal 700024"
-      },
-
-  ];
+ 
    
   export const Doc_Appointment:React.FC=():JSX.Element=>{
     const [loading,setLoading]=useState(true);
@@ -240,7 +119,7 @@ type addressType={
       return ` ${address.city}, ${address.countryName}, ${address.postcode}`;
     }
     if(loading){
-      return <div>Loading...</div>
+      return <SkeletonLoader2 />
     }
     return (
         <Card className="h-full w-full mx-2" placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined} >

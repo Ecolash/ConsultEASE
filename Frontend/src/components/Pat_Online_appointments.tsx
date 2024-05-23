@@ -1,11 +1,8 @@
 import {
     
   BookX,
-    ChevronsUpDownIcon,
     Clock10Icon,
     EyeIcon,
-    LucideBookX,
-    NewspaperIcon,
     PencilLineIcon,
     SquareCheckBig,
     
@@ -24,6 +21,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { convert } from "./Pat_Appointments";
 import { ImagePopupButton2 } from "./PopUp";
+import { SkeletonLoader2 } from "./Skeleton2";
 
 type onlineappointmentType={
   id:string,
@@ -43,140 +41,6 @@ type onlineappointmentType={
    
   const TABLE_HEAD = ["Doctor Name", "Specialization", "Status",  "Meeting Link","Date and Time", "Prescription", "Action"]
    
-  const TABLE_ROWS = [
-    {
-      name: "John Michael",
-      specialization: "Pulmonologist",
-      years : "5",
-      rating : "4.2",
-      link: 'koy-fcfu-scs',
-      status: 'Confirmed',
-      date: "23/04/18",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Alexa Liras",
-      specialization: "Pulmonologist",
-      years : "5",
-      rating : "4.2",
-      link: 'koy-fcfu-scs',
-      status: 'Rejected',
-      date: "23/04/18",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Laurent Perrier",
-      specialization: "Pulmonologist",
-      years : "5",
-      rating : "4.2",
-      link: 'koy-fcfu-scs',
-      status: 'Pending',
-      date: "19/09/17",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Michael Levi",
-      specialization: "Pulmonologist",
-      years : "5",
-      rating : "4.2",
-      link: 'koy-fcfu-scs',
-      status: 'Completed',
-      date: "24/12/08",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-      name: "Richard Gran",
-      specialization: "Pulmonologist",
-      years : "5",
-      rating : "4.2",
-      link: 'koy-fcfu-scs',
-      status: 'Completed',
-      date: "04/10/21",
-      time: "7:30 PM",
-      statusP: "View Prescription",
-    },
-    {
-        name: "Richard Gran",
-        specialization: "Pulmonologist",
-        years : "5",
-      rating : "4.2",
-      link: 'koy-fcfu-scs',
-      status: 'Rejected',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-    },
-    {
-        name: "Michael Levi",
-        specialization: "Pulmonologist",
-        years : "5",
-        rating : "4.2",
-      link: 'koy-fcfu-scs',
-        status: 'Completed',
-        date: "24/12/08",
-        time: "7:30 PM",
-        statusP: "Not yet Uploaded"
-      },
-      {
-        name: "Richard Gran",
-        specialization: "Pulmonologist",
-        years : "5",
-        rating : "4.2",
-        link: 'koy-fcfu-scs',
-        status: 'Completed',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-          name: "Richard Gran",
-          specialization: "Pulmonologist",
-          years : "5",
-          rating : "4.2",
-        link: 'koy-fcfu-scs',
-          status: 'Rejected',
-          date: "04/10/21",
-          time: "7:30 PM",
-          statusP: "View Prescription",
-      },
-      {
-        name: "Michael Levi",
-        specialization: "Pulmonologist",
-        years : "5",
-        rating : "4.2",
-        link: 'koy-fcfu-scs',
-        status: 'Completed',
-        date: "24/12/08",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-        name: "Richard Gran",
-        specialization: "Pulmonologist",
-        years : "5",
-        rating : "4.2",
-        link: 'koy-fcfu-scs',
-        status: 'Completed',
-        date: "04/10/21",
-        time: "7:30 PM",
-        statusP: "View Prescription",
-      },
-      {
-          name: "Richard Gran",
-          specialization: "Pulmonologist",
-          years : "5",
-        rating : "4.2",
-        link: 'koy-fcfu-scs',
-        status: 'Rejected',
-          date: "04/10/21",
-          time: "7:30 PM",
-          statusP: "Not yet Uploaded"
-      },
-  ];
    
   export const Pat_Online_appoinments=()=>{
     const [loading,setLoading]=useState(true);
@@ -280,7 +144,7 @@ type onlineappointmentType={
 
 
     if(loading){
-      return <div>Loading...</div>
+      return <SkeletonLoader2 />
     }
 
     return (
@@ -302,7 +166,7 @@ type onlineappointmentType={
       <table className="mt-4 w-full min-w-max table-auto text-left">
         <thead>
           <tr>
-            {TABLE_HEAD.map((head, index) => (
+            {TABLE_HEAD.map((head) => (
               <th
                 key={head}
                 className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-3 border-r-[2px] border-violet-700 transition-colors bg-violet-900"

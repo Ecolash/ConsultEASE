@@ -9,15 +9,13 @@ import {
     CardHeader,
     Typography,
     CardBody,
-    IconButton,
-    Tooltip,
   } from "@material-tailwind/react";
   import { useState,useEffect} from "react";
   import { doctorFullInfotype } from "../InputTypes/info";
   import { BACKEND_URL } from "../config";
   import axios from "axios";
-  import { Link } from "react-router-dom";
   import { useNavigate } from "react-router-dom";
+import { SkeletonLoader2 } from "./Skeleton2";
 
   type appointmentType={
     id:string,
@@ -201,7 +199,7 @@ const TABLE_HEAD = ["Doctor Name", "Specialization", "Status", "Date and Time","
     }
 
     if(loading){
-      return <div>Loading...</div>
+      return <SkeletonLoader2 />
     }
     return (
     <Card className="h-full w-full mx-2"  placeholder={undefined} onPointerEnterCapture={undefined} onPointerLeaveCapture={undefined}>

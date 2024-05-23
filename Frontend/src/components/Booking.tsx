@@ -185,7 +185,7 @@ export const  Booking:React.FC<booktype>=(props)=>{
 };
 
 
-const Card = ({ date, onSelect, selected,clinic_days }: { date: Date, onSelect: (date: Date) => void, selected: boolean|undefined ,clinic_days:string[]}) => {
+const Card = ({ date, onSelect, clinic_days }: { date: Date, onSelect: (date: Date) => void, selected: boolean|undefined ,clinic_days:string[]}) => {
   const formattedDate = new Date(date).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
