@@ -39,13 +39,13 @@ ConsultEASE is designed to bridge the gap between doctors and patients seamlessl
 
 ## Contributors
 
-### Diganta Mandal
-- **Role**: Full Stack Developer
-- **GitHub**: [Digs003](https://github.com/Digs003)
-
 ### Tuhin Mondal
 - **Role**: Frontend Developer
 - **GitHub**: [Ecolash](https://github.com/Ecolash)
+
+- ### Diganta Mandal
+- **Role**: Full Stack Developer
+- **GitHub**: [Digs003](https://github.com/Digs003)
 
 ### Aritra Maji
 - **Role**: Backend Developer
